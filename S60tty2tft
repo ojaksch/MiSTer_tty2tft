@@ -1,0 +1,51 @@
+#!/bin/bash
+
+#
+#
+
+! [ "$(dos2unix -ic /media/fat/tty2tft/*.ini)" = "" ] && dos2unix -k -q /media/fat/tty2tft/*.ini
+. /media/fat/tty2tft/tty2tft-system.ini
+. /media/fat/tty2tft/tty2tft-user.ini
+cd /tmp
+
+# Start
+start() {
+    ### Wait for USB module and start tty2tft daemon
+    WAITEND=$((SECONDS+10))
+    while !  [ -c ${TTYDEV} ] && [ ${SECONDS} -lt ${WAITEND} ]; do
+      sleep 0.1
+    done
+
+    if [[ -x ${DAEMONSCRIPT} ]]; then
+      echo "Starting ${DAEMONNAME}..."
+      ${DAEMONSCRIPT} &
+    else
+      echo "${DAEMONSCRIPT} not found!"
+    fi
+}
+
+# Stop
+stop() {
+    echo "Stopping ${DAEMONNAME}..."
+    killall ${DAEMONNAME}
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop) 
+        stop
+        ;;
+  restart)
+        stop
+        start
+        ;;
+#  reload)
+#       reload
+#       ;;
+  *)
+#        echo "Usage: $0 {start|stop|restart|reload}"
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac

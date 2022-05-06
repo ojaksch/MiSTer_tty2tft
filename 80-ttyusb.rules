@@ -1,0 +1,4 @@
+# SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", SYMLINK+="tty2oled"
+# SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", SYMLINK+="tty2tft"
+KERNEL=="ttyUSB?", ATTRS{bcdDevice}=="0264", SYMLINK+="tty2oled"
+KERNEL=="ttyUSB?", ATTRS{bcdDevice}=="0254", SYMLINK+="tty2tft"
