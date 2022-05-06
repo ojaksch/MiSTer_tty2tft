@@ -11,7 +11,15 @@ flashesp() {
     echo "------------------------------------------------------------------------"
     case "${MCUtype}" in
 	HWESP32DE)
-	    wget -q ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/esp32de_${BUILDVER}.bin
+	    wget -q ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/${MAC}/esp32de_${BUILDVER}.bin
+	    if ! [ -e esp32de_${BUILDVER}.bin ]; then
+		echo -e "${fred}Unfortunately something went wrong!${freset}"
+		echo -e "${fred}Possible causes:${freset}"
+		echo -e "${fred}- Missing files, busy server, drunken Webmaster. Call forum.${freset}"
+		echo -e "${fred}- You aren't a registered user. Call forum and register.${freset}"
+		echo -e "${fred}\nMAC address: ${MAC}${freset}"
+		exit 255
+	    fi
 	    ${TMPDIR}/esptool.py --chip esp32 --port ${TTYDEV} --baud ${DBAUD} ${DSTD} 0xe000 ${TMPDIR}/boot_app0.bin 0x1000 ${TMPDIR}/bootloader_dio_80m.bin 0x10000 ${TMPDIR}/esp32de_${BUILDVER}.bin 0x8000 ${TMPDIR}/partitions.bin
 	    ;;
     esac
@@ -73,11 +81,17 @@ if [[ -c ${TTYDEV} ]]; then
 
     echo -en "${freset}Trying to identify device... ${freset}"
     echo "CMDHWINF" > ${TTYDEV} ; read -t5 BLA < ${TTYDEV}
-    MCUtype=${BLA:0:9}
-    SWver=${BLA:10:6}
-    MAC=${BLA:17:17}
-    if [ "${MCUtype:0:2}" = "HW" ]; then
-	echo -e "${fgreen}${MCUtype} with sketch version ${SWver}${freset}"
+    if [[ ${?} > 1 ]] && [ -z "${BLA}" ]; then
+	MCUtype="HWESP32DE"
+	SWver="0"
+	checkesp
+    else
+	MCUtype="${BLA:0:9}"
+	SWver="${BLA:10:6}"
+	MAC="${BLA:17:17}"
+	if [ "${MCUtype:0:2}" = "HW" ]; then
+	    echo -e "${fgreen}${MCUtype} with sketch version ${SWver}${freset}"
+	fi
     fi
 else
     echo -e "${fred}Could not connect to interface. Please check USB connection and run script again.${freset}"
@@ -87,7 +101,7 @@ fi
 # Check for MCU
 case "${MCUtype}" in
     Exit)	exit 0 ;;
-    HWESP32DE)	echo -e "${fyellow}ESP32 selected/detected (TTGO/DTI).${freset}" ;;
+    HWESP32DE)	echo -e "${fyellow}ESP32 selected/detected.${freset}" ;;
 esac
 
 if [ "${1}" = "FORCE" ]; then
