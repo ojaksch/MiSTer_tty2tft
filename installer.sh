@@ -1,7 +1,7 @@
 #!/bin/bash
 
-REPOSITORY_URL1="https://raw.githubusercontent.com/venice1200/MiSTer_tty2tft/main"
-REPOSITORY_URL2="https://www.tty2tft.de//MiSTer_tty2tft-installer"
+REPOSITORY_URL1="https://raw.githubusercontent.com/ojaksch/MiSTer_tty2tft/main"
+REPOSITORY_URL2="https://www.tty2tft.de/MiSTer_tty2tft-installer"
 DBAUD="921600"
 DSTD="--before default_reset --after hard_reset write_flash --compress --flash_size detect"
 TMPDIR=$(mktemp -d)
