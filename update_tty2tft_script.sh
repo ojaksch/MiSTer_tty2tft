@@ -23,8 +23,12 @@
 # Changelog:
 
 
+! [ -e /media/fat/tty2oled/tty2oled-user.ini ] && touch /media/fat/tty2oled/tty2oled-user.ini
 . /media/fat/tty2tft/tty2tft-system.ini
 . /media/fat/tty2tft/tty2tft-user.ini
+
+# Check for and create tty2oled script folder
+[[ -d ${TTY2TFT_PATH} ]] && cd ${TTY2TFT_PATH} || mkdir ${TTY2TFT_PATH}
 
 # Check and remount root writable if neccessary
 if [ $(/bin/mount | head -n1 | grep -c "(ro,") = 1 ]; then
@@ -33,7 +37,7 @@ if [ $(/bin/mount | head -n1 | grep -c "(ro,") = 1 ]; then
 fi
 
 # Check for and create tty2tft script folder
-[[ -d ${tty2tft_PATH} ]] || mkdir ${tty2tft_PATH}
+[[ -d ${TTY2TFT_PATH} ]] || mkdir ${TTY2TFT_PATH}
 
 if [ ! -e ${USERSTARTUP} ] && [ -e /etc/init.d/S99user ]; then
   if [ -e ${USERSTARTUPTPL} ]; then
@@ -50,11 +54,6 @@ if [ $(grep -c "tty2tft" ${USERSTARTUP}) = "0" ]; then
   echo -e "\n# Startup tty2tft" >> ${USERSTARTUP}
   echo -e "[[ -e ${INITSCRIPT} ]] && ${INITSCRIPT} \$1" >> ${USERSTARTUP}
 fi
-
-echo -e "${fgreen}tty2tft update script"
-echo -e "----------------------${freset}"
-echo -e "${fgreen}Checking for available tty2tft updates...${freset}"
-
 
 # init script
 wget ${NODEBUG} "${REPOSITORY_URL}/S60tty2tft" -O /tmp/S60tty2tft
@@ -95,24 +94,9 @@ elif ! cmp -s /tmp/${DAEMONNAME} ${DAEMONSCRIPT}; then
 fi
 [[ -f /tmp/${DAEMONNAME} ]] && rm /tmp/${DAEMONNAME}
 
-# Download tty2tft Utilities
-wget ${NODEBUG} "${REPOSITORY_URL}/tty2tft_cc.sh" -O /tmp/tty2tft_cc.sh
-if ! cmp -s /tmp/tty2tft_cc.sh ${CCSCRIPT}; then
-  if [ "${SCRIPT_UPDATE}" = "yes" ]; then
-    echo -e "${fyellow}Updating tools script ${fmagenta}tty2tft_cc.sh${freset}"
-    mv -f /tmp/tty2tft_cc.sh ${CCSCRIPT}
-    chmod +x ${CCSCRIPT}
-  else
-    echo -e "${fblink}Skipping${fyellow} available tools script update because of the ${fcyan}SCRIPT_UPDATE${fyellow} INI-Option${freset}"
-  fi
-fi
-
 # Download the installer to check esp firmware
 cd /tmp
-if [ "${tty2tft_UPDATE}" = "yes" ]; then
-    [ "${tty2tft_FW_TESTING}" = "yes" ] && FWTESTING="T" || FWTESTING="-"
-    bash <(wget -qO- ${REPOSITORY_URL}/installer.sh) ${FWTESTING} UPDATER
-fi
+[ "${TTY2OLED_UPDATE}" = "yes" ] && bash <(wget -qO- ${REPOSITORY_URL}/installer.sh) UPDATER
 
 # Check and remount root non-writable if neccessary
 [ "${MOUNTRO}" = "true" ] && /bin/mount -o remount,ro /

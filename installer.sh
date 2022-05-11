@@ -34,9 +34,6 @@ checkesp() {
     MAC=${MAC^^}
 }
 
-# When started with parameter "T" use testing sketch
-[ "${1}" = "T" ] && BUILDVER=$(wget -q ${REPOSITORY_URL2}/buildverT -O -) || BUILDVER=$(wget -q ${REPOSITORY_URL2}/buildver -O -)
-
 # If there's an existing ini, use it
 if [ -r /media/fat/tty2tft/tty2tft-system.ini ]; then
     . /media/fat/tty2tft/tty2tft-system.ini
@@ -50,6 +47,9 @@ else
     wget -q ${REPOSITORY_URL1}/tty2tft-user.ini -O ${TMPDIR}/tty2tft-user.ini
     . ${TMPDIR}/tty2tft-user.ini
 fi
+
+# When started with parameter "T" use testing sketch
+[ "${TTY2OLED_FW_TESTING}" = "yes" ] && BUILDVER=$(wget -q ${REPOSITORY_URL2}/buildverT -O -) || BUILDVER=$(wget -q ${REPOSITORY_URL2}/buildver -O -)
 
 # Clear the display by setting this as CORENAME, which keeps the display while updating
 echo "cls" > /tmp/CORENAME
@@ -125,14 +125,14 @@ else
 	    echo -en "${fyellow}Do you want to Downgrade? Use Cursor or Joystick for ${fgreen}YES=UP${freset} / ${fred}NO=DOWN${fyellow}. Countdown: 9${freset}"
 	    yesno 9
 	    if [ "${KEY}" = "y" ]; then
-	    echo "Downgrading tty2tft" > /dev/ttyUSB0
-	    flashesp
+		echo "Downgrading tty2tft" > /dev/ttyUSB0
+		flashesp
 	    fi
 	fi
-	[ "${INITSTOPPED}" = "yes" ] && ! [ "${2}" = "UPDATER" ] && ${INITSCRIPT} start
+	[ "${INITSTOPPED}" = "yes" ] && ! [ "${1}" = "UPDATER" ] && ${INITSCRIPT} start
     elif [[ "${SWver}" = "${BUILDVER}" ]]; then
 	echo -e "${fyellow}Good boy, your hardware is up-to-date!${freset}"
-	[ "${INITSTOPPED}" = "yes" ] && ! [ "${2}" = "UPDATER" ] && ${INITSCRIPT} start
+	[ "${INITSTOPPED}" = "yes" ] && ! [ "${1}" = "UPDATER" ] && ${INITSCRIPT} start
     fi
 fi
 echo "MENU" > /tmp/CORENAME

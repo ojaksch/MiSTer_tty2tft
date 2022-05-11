@@ -19,12 +19,6 @@ dbug() {
   fi
 }
 
-# Send-Contrast-Data function
-sendcontrast() {
-  dbug "Sending: CMDCON,${CONTRAST}"
-  echo "CMDCON,${CONTRAST}" > ${TTYDEV}						# Send Contrast Command and Value
-}
-
 # Rotate Display function
 sendrotation() {
   if [ "${ROTATE}" = "yes" ]; then
@@ -81,7 +75,6 @@ if [ -c "${TTYDEV}" ]; then							# check for tty device
   echo "QWERTZ" > ${TTYDEV}							# First Transmission to clear serial send buffer
   dbug "Send QWERTZ as first transmission"
   sleep ${WAITSECS}
-  sendcontrast									# Set Contrast
   sendrotation									# Set Display Rotation
   setvideoplay									# Set playing of videos or not
   sendtime									# Set time and date

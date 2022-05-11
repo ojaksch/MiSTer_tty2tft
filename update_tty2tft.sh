@@ -68,45 +68,17 @@ fi
 wget ${NODEBUG} --no-cache "${REPOSITORY_URL}/tty2tft-system.ini" -O /tmp/tty2tft-system.ini
 check4error "${?}"
 . /tmp/tty2tft-system.ini
-[[ -d "${tty2tft_PATH}" ]] || mkdir "${tty2tft_PATH}"
-cmp -s /tmp/tty2tft-system.ini "${tty2tft_PATH}/tty2tft-system.ini"
+[[ -d "${TTY2TFT_PATH}" ]] || mkdir "${TTY2TFT_PATH}"
+cmp -s /tmp/tty2tft-system.ini "${TTY2TFT_PATH}/tty2tft-system.ini"
 if [ "${?}" -gt "0" ]; then
-    mv /tmp/tty2tft-system.ini "${tty2tft_PATH}/tty2tft-system.ini"
-    . "${tty2tft_PATH}/tty2tft-system.ini"
+    mv /tmp/tty2tft-system.ini "${TTY2TFT_PATH}/tty2tft-system.ini"
+    . "${TTY2TFT_PATH}/tty2tft-system.ini"
 fi
 
-wget ${NODEBUG} --no-cache "${REPOSITORY_URL}/tty2tft-user.ini" -O /tmp/tty2tft-user.ini
-check4error "${?}"
-if [ -s /tmp/tty2tft-user.ini ]; then
-  . /tmp/tty2tft-user.ini
-  if ! [ -f "${tty2tft_PATH}/tty2tft-user.ini" ]; then
-    echo -e "${fyellow}Creating tty2tft-user.ini File ${fmagenta}${PICNAME}${freset}"
-    cp /tmp/tty2tft-user.ini "${tty2tft_PATH}/tty2tft-user.ini"
-  fi
-  if ! [[ "$(head -n1 /tmp/tty2tft-user.ini)" = "$(head -n1 ${tty2tft_PATH}/tty2tft-user.ini)" ]]; then
-    echo -e "${fred}There is a newer version of ${fyellow}${tty2tft_PATH}/tty2tft-user.ini${fred} availble.${freset}"
-    echo -e "${fred}It is very likely that something will break if we continue. You should backup${freset}"
-    echo -e "${fred}your INI file and move or delete the original afterwards. After re-running${freset}"
-    echo -e "${fred}this updater and receiving the new INI file, compare both versions and edit${freset}"
-    echo -e "${fred}the new INI file, if necessary.${freset}"
-    echo -e "\n${fmagenta}If you would like that we continue and automagically doing the rest,"
-    echo -en "please answer YES. Use Cursor or Joystick for ${fgreen}YES=UP${freset} / ${fred}NO=DOWN${fyellow}. Countdown: 9${freset}"
-    yesno 9
-    if [ "${KEY}" = "y" ]; then
-      mv -f "${tty2tft_PATH}/tty2tft-user.ini" "${tty2tft_PATH}/tty2tft-user.ini.bak"
-      mv -f /tmp/tty2tft-user.ini "${tty2tft_PATH}/tty2tft-user.ini"
-      echo -e "\n${fyellow}These are the differences:${freset}\n"
-      diff -u "${tty2tft_PATH}/tty2tft-user.ini.bak" "${tty2tft_PATH}/tty2tft-user.ini"
-      echo -e "\n${fyellow}Please edit the new INI file and make necessary changes,"
-      echo -e "then re-run this updater.${freset}\n"
-    else
-      echo -e "\n${fyellow}Aborting.${freset}"
-    fi
-    exit 1
-  fi
-fi
-[ -f "${tty2tft_PATH}/tty2tft.ini" ] && mv "${tty2tft_PATH}/tty2tft.ini" "${tty2tft_PATH}/tty2tft.ini.bak"
-[ -f "/media/fat/Scripts/tty2tft.ini" ] && mv "/media/fat/Scripts/tty2tft.ini" "${tty2tft_PATH}/tty2tft-user.ini.bak"
+! [ -e /media/fat/tty2oled/tty2oled-user.ini ] && touch /media/fat/tty2oled/tty2oled-user.ini
+
+[ -f "${TTY2TFT_PATH}/tty2tft.ini" ] && mv "${TTY2TFT_PATH}/tty2tft.ini" "${TTY2TFT_PATH}/tty2tft.ini.bak"
+[ -f "/media/fat/Scripts/tty2tft.ini" ] && mv "/media/fat/Scripts/tty2tft.ini" "${TTY2TFT_PATH}/tty2tft-user.ini.bak"
 
 wget ${NODEBUG} --no-cache "${REPOSITORY_URL}/update_tty2tft_script.sh" -O "${SCRIPTNAME}"
 check4error "${?}"

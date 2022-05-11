@@ -1,22 +1,23 @@
 Commands:
-* CMDCLS                        Bildschirm vollständig schwärzen
-+ CMDCRED                       Bildschirm rot einfärben (Test/Effekt)
-* CMDDON                        Bildschirm Einschalten
-* CMDDOFF                       Bildschirm Ausschalten
-* CMDDINVON                     Bildschirm invertieren Ein
-* CMDDINVOFF                    Bildschirm invertieren Aus
-* CMDRESET                      ESP Neustarten
-* CMDSNAM                       Namen des aktuellen Bilds anzeigen
-* CMDROT                        Bildschirm rotieren
-* CMDDUPD                       Bildschirm aktualisieren
-* CMDDELETE                     Aktuelles Bild/Video von SD löschen
-* CMDUPLOAD,<URL>               Upload von <URL>
-* CMDCOR,MENU                   Begrüßungsbildschirm anzeigen
-* CMDCOR,<CORENAME>             Bild/Video anzeigen
-* CMDSETTIME,<TSTAMP>           Zeit auf tty2tft setzen
-* CMDVIDEOPLAY,<PARAM>          Video abpielen oder nicht (yes/no/may)
-* CMDSAVER,<PARAM>,<PARAM>      Bildschirmschoner nach x Min (1-59)., wechseln alle y Sek. (1-59)
+* CMDCLS                        Black out screen
++ CMDCRED                       Fill screen red (just for testing)
+* CMDDON                        Turn on screen
+* CMDDOFF                       Turn off screen
+* CMDDINVON                     Invert screen on
+* CMDDINVOFF                    Invert screen off
+* CMDRESET                      Restart ESP
+* CMDSNAM                       Show picture's name
+* CMDROT,<PARAM>                Rotate screen (0=none,1=90°,2=180°,1=90°,3=270°)
+* CMDDUPD                       Refresh screen
+* CMDDELETE                     Delete actual picture/video from SD
+* CMDUPLOAD,<URL>               Upload file from <URL>
+* CMDCOR,<PARAM>                Load picture from SD
+* CMDCOR,<CORENAME>             Show picture/video
+* CMDSETTIME,<TSTAMP>           Set time and date
+* CMDVIDEOPLAY,<PARAM>          Play videos or not (yes/no/may)
+* CMDSAVER,<PARAM>,<PARAM>      Screensaver after x mins. (1-59), change after y secs, (1-59)
+* CMDHWINF                      Send hardware info, BuildVersion and MAC address
 
-Wird ein Bild/Video nicht auf SD gefunden und WLAN ist aus, gibt es ein "...nicht gefunden..." - Bild.
-Ist aber WLAN an, wird ein **Bild** (nicht aber Video)  von archive.org geladen und auf SD gespeichert.
-Ein Upload per CMDUPLOAD speichert das Bild/Video ebenfalls auf SD.
+If a picture/video can't be found on SD and WiFi isn't available, show a "...not found..." picture.
+But is WiFi available load a **picture** (but not a video) from archive.org and save it on SD.
+An upload with CMDUPLOAD saves the picture/video on SD.
