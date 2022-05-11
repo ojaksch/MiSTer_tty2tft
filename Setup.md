@@ -1,6 +1,6 @@
 Ready to rumble?
 
-- If not already done get the archive from [here](https://drive.google.com/drive/folders/1KByTczqLIjfHOb9TDX-hi4kdtbvZnYc9?usp=sharing) and extract the content to your SD card. Insert SD card into your display.
+- Copy the **content** of *SD_card_content* to a reliable SD card. While beeing there you can fill up the subdirectorys with your own content.
 
 - Open a ssh-shell to your MiSTer or open a console at MiSTer and logon.
 
