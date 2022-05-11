@@ -143,5 +143,5 @@ else
 fi
 echo "MENU" > /tmp/CORENAME
 
-rm -rf ${TMPDIR}
+rm -rf "${TMPDIR}"
 exit 0
