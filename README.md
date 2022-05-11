@@ -10,4 +10,4 @@ Den /jpg/ Ordner auf eine FAT32-Karte draufkopieren und für WLAN wifisetup.h ed
 
 
 Installation:
-wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash
+wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- IDENTIFY

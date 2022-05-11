@@ -105,8 +105,9 @@ case "${MCUtype}" in
 esac
 
 if [ "${1}" = "IDENTIFY" ]; then
-    echo -e "${fred}FORCED UPDATE${freset}"
-    echo "${MAC}"
+    echo -e "${fred}Trying to identify device...${freset}"
+    echo "MAC address is: ${MAC}"
+    exit 0
 fi
 
 if [ "${1}" = "FORCE" ]; then
