@@ -12,8 +12,7 @@ This gives you the MAC address of your ESP device. Tell me that MAC address. Kee
 
 - After my OK type in  
 `wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash`  
-which will download and flash the ESP firmware. You should see a ![welcome screen](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/000-arcade.jpg) after the reboot of the ESP.
-
+which will download and flash the ESP firmware. You should see a [welcome screen](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/000-arcade.jpg) after the reboot of the ESP.
 
 - Type in  
 `wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/update_tty2tft.sh -O - | bash`  
