@@ -9,5 +9,9 @@ Arduino IDE Board Type: ESP32dev
 Den /jpg/ Ordner auf eine FAT32-Karte draufkopieren und für WLAN wifisetup.h editieren.
 
 
-Installation:
+
+Installation of ESP32:
 wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- IDENTIFY
+
+Update of ESP32:
+wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash

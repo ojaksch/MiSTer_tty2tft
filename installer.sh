@@ -106,7 +106,7 @@ esac
 
 if [ "${1}" = "IDENTIFY" ]; then
     #echo -e "${fred}Trying to identify device...${freset}"
-    echo "MAC address is: ${MAC}"
+    echo -e "${fcyan}MAC address is: ${MAC}${freset}"
     exit 0
 fi
 
