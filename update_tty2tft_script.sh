@@ -16,18 +16,18 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # You can download the latest version of this script from:
-# https://github.com/venice1200/MiSTer_tty2oled
+# https://github.com/ojaksch/MiSTer_tty2tft
 
 
 
 # Changelog:
 
 
-! [ -e /media/fat/tty2oled/tty2oled-user.ini ] && touch /media/fat/tty2oled/tty2oled-user.ini
+! [ -e /media/fat/tty2tft/tty2tft-user.ini ] && touch /media/fat/tty2tft/tty2tft-user.ini
 . /media/fat/tty2tft/tty2tft-system.ini
 . /media/fat/tty2tft/tty2tft-user.ini
 
-# Check for and create tty2oled script folder
+# Check for and create tty2tft script folder
 [[ -d ${TTY2TFT_PATH} ]] && cd ${TTY2TFT_PATH} || mkdir ${TTY2TFT_PATH}
 
 # Check and remount root writable if neccessary
@@ -96,7 +96,7 @@ fi
 
 # Download the installer to check esp firmware
 cd /tmp
-[ "${TTY2OLED_UPDATE}" = "yes" ] && bash <(wget -qO- ${REPOSITORY_URL}/installer.sh) UPDATER
+[ "${TTY2TFT_UPDATE}" = "yes" ] && bash <(wget -qO- ${REPOSITORY_URL}/installer.sh) UPDATER
 
 # Check and remount root non-writable if neccessary
 [ "${MOUNTRO}" = "true" ] && /bin/mount -o remount,ro /

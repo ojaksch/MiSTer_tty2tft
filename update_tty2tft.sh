@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # You can download the latest version of this script from:
-# https://github.com/venice1200/MiSTer_tty2oled
+# https://github.com/ojaksch/MiSTer_tty2tft
 
 
 
@@ -25,8 +25,8 @@
 freset="\e[0m\033[0m"
 fblue="\e[1;34m"
 
-REPOSITORY_URL="https://raw.githubusercontent.com/venice1200/MiSTer_tty2tft/main"
-#REPOSITORY_URL="https://raw.githubusercontent.com/venice1200/MiSTer_tty2tft/main/Testing"    # Testing branch
+REPOSITORY_URL="https://raw.githubusercontent.com/ojaksch/MiSTer_tty2tft/main"
+#REPOSITORY_URL="https://raw.githubusercontent.com/ojaksch/MiSTer_tty2tft/main/Testing"    # Testing branch
 
 SCRIPTNAME="/tmp/update_tty2tft_script.sh"
 NODEBUG="-q -o /dev/null"
@@ -75,7 +75,7 @@ if [ "${?}" -gt "0" ]; then
     . "${TTY2TFT_PATH}/tty2tft-system.ini"
 fi
 
-! [ -e /media/fat/tty2oled/tty2oled-user.ini ] && touch /media/fat/tty2oled/tty2oled-user.ini
+! [ -e /media/fat/tty2tft/tty2tft-user.ini ] && touch /media/fat/tty2tft/tty2tft-user.ini
 
 [ -f "${TTY2TFT_PATH}/tty2tft.ini" ] && mv "${TTY2TFT_PATH}/tty2tft.ini" "${TTY2TFT_PATH}/tty2tft.ini.bak"
 [ -f "/media/fat/Scripts/tty2tft.ini" ] && mv "/media/fat/Scripts/tty2tft.ini" "${TTY2TFT_PATH}/tty2tft-user.ini.bak"

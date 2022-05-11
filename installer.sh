@@ -49,7 +49,7 @@ else
 fi
 
 # When started with parameter "T" use testing sketch
-[ "${TTY2OLED_FW_TESTING}" = "yes" ] && BUILDVER=$(wget -q ${REPOSITORY_URL2}/buildverT -O -) || BUILDVER=$(wget -q ${REPOSITORY_URL2}/buildver -O -)
+[ "${TTY2TFT_FW_TESTING}" = "yes" ] && BUILDVER=$(wget -q ${REPOSITORY_URL2}/buildverT -O -) || BUILDVER=$(wget -q ${REPOSITORY_URL2}/buildver -O -)
 
 # Clear the display by setting this as CORENAME, which keeps the display while updating
 echo "cls" > /tmp/CORENAME
@@ -112,7 +112,7 @@ fi
 
 if [ "${1}" = "FORCE" ]; then
     echo -e "${fred}FORCED UPDATE${freset}"
-    echo -e "${fyellow}Version of your tty2oled device is ${fblue}${SWver}${fyellow}, forced BUILDVER is ${fgreen}${BUILDVER}${fyellow}.${freset}"
+    echo -e "${fyellow}Version of your tty2tft device is ${fblue}${SWver}${fyellow}, forced BUILDVER is ${fgreen}${BUILDVER}${fyellow}.${freset}"
     echo -e "${fyellow}MCUtype is set to ${fblue}${MCUtype}${freset}"
     flashesp
     [ "${INITSTOPPED}" = "yes" ] && ${INITSCRIPT} start
