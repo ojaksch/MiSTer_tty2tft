@@ -12,6 +12,7 @@ cd /tmp
 # Debug function
 dbug() {
   if [ "${debug}" = "true" ]; then
+    echo "${1}"
     if [ ! -e ${debugfile} ]; then						# log file not (!) exists (-e) create it
       echo "---------- tty2tft Debuglog ----------" > ${debugfile}
     fi 
@@ -68,7 +69,6 @@ fi										# end if command line Parameter
 
 # Let's go
 if [ -c "${TTYDEV}" ]; then							# check for tty device
-  [ "${debug}" = "true" ] && echo -e "\n${TTYDEV} detected, setting Parameter: ${BAUDRATE} ${TTYPARAM}."
   dbug "${TTYDEV} detected, setting Parameter: ${BAUDRATE} ${TTYPARAM}."
   stty -F ${TTYDEV} ${BAUDRATE} ${TTYPARAM}					# set tty parameter
   sleep ${WAITSECS}
@@ -85,16 +85,15 @@ if [ -c "${TTYDEV}" ]; then							# check for tty device
       echo "Read CORENAME: -${newcore}-"
       dbug "Read CORENAME: -${newcore}-"
       if [ "${newcore}" != "${oldcore}" ]; then					# proceed only if Core has changed
-	echo "Send -${newcore}- to ${TTYDEV}."
 	dbug "Send -${newcore}- to ${TTYDEV}."
 	senddata "${newcore}"							# The "Magic"
 	oldcore="${newcore}"							# update oldcore variable
 	sendtime								# Update time and date
 	setscreensaver								# Reenable screensaver, if emabled
       fi									# end if core check
-      inotifywait -e modify "${corenamefile}"					# wait here for next change of corename
+      [ "${debug}" = "false" ] && inotifywait -qq -e modify "${corenamefile}"	# wait here for next change of corename, -qq for quietness
+      [ "${debug}" = "true" ] && inotifywait -e modify "${corenamefile}"	# but not -qq when debugging
     else									# CORENAME file not found
-     echo "File ${corenamefile} not found!"
      dbug "File ${corenamefile} not found!"
     fi										# end if /tmp/CORENAME check
   done										# end while
