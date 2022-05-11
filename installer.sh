@@ -104,6 +104,11 @@ case "${MCUtype}" in
     HWESP32DE)	echo -e "${fyellow}ESP32 selected/detected.${freset}" ;;
 esac
 
+if [ "${1}" = "IDENTIFY" ]; then
+    echo -e "${fred}FORCED UPDATE${freset}"
+    echo "${MAC}"
+fi
+
 if [ "${1}" = "FORCE" ]; then
     echo -e "${fred}FORCED UPDATE${freset}"
     echo -e "${fyellow}Version of your tty2oled device is ${fblue}${SWver}${fyellow}, forced BUILDVER is ${fgreen}${BUILDVER}${fyellow}.${freset}"
