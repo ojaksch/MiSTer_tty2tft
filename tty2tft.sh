@@ -22,9 +22,9 @@ dbug() {
 
 # Rotate Display function
 sendrotation() {
-  if [ "${ROTATE}" = "yes" ]; then
-    dbug "Sending: CMDROT,1"
-    echo "CMDROT,1" > ${TTYDEV}							# Send Rotation if set to "yes"
+  if ! [ "${ROTATE}" = "no" ]; then
+    dbug "Sending: CMDROT,${ROTATE}"
+    echo "CMDROT,${ROTATE}" > ${TTYDEV}							# Send Rotation if set to "yes"
     sleep ${WAITSECS}
     echo "CMDSORG" > ${TTYDEV}							# Show Start Screen rotated
     sleep 4

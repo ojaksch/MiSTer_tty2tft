@@ -2,10 +2,10 @@
 | ----------------------- |-------------- |
 | CMDCLS                  | Black out screen |
 | CMDCRED                 | Fill screen red (just for testing) |
-| CMDDON                  | Turn on screen |
-| CMDDOFF                 | Turn off screen |
-| CMDDINVON               | Invert screen on |
-| CMDDINVOFF              | Invert screen off |
+| CMDDON                  | Turn on screen (ILI9341 only) |
+| CMDDOFF                 | Turn off screen (ILI9341 only) |
+| CMDDINVON               | Invert screen on (ILI9341 only) |
+| CMDDINVOFF              | Invert screen off (ILI9341 only) |
 | CMDRESET                | Restart ESP |
 | CMDSNAM                 | Show picture's name |
 | CMDROT,PARAM            | Rotate screen (0=none,1=90°,2=180°,1=90°,3=270°) |
