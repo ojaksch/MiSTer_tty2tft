@@ -16,7 +16,6 @@ JPG pictures and MJPEG videos from SD card, optional Wifi.
 </div>
 
 ---
-[![Badge License]][License]
 <!----------------------------------------------------------------------------->
 
 [MiSTer FPGA]: https://github.com/MiSTer-devel
