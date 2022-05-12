@@ -11,16 +11,22 @@ flashesp() {
     echo "------------------------------------------------------------------------"
     case "${MCUtype}" in
 	HWESP32DE)
-	    wget -q ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/${MAC}/esp32de_${BUILDVER}.bin
-	    if ! [ -e esp32de_${BUILDVER}.bin ]; then
-		echo -e "${fred}Unfortunately something went wrong!${freset}"
-		echo -e "${fred}Possible causes:${freset}"
-		echo -e "${fred}- Missing files, busy server, drunken Webmaster. Call forum.${freset}"
-		echo -e "${fred}- You aren't a registered user. Call forum and register.${freset}"
-		echo -e "${fred}\nMAC address: ${MAC}${freset}"
-		exit 255
+	    if [ "${1}" = "stage1" ]; then
+		wget -q ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/gfx-test.bin
+		${TMPDIR}/esptool.py --chip esp32 --port ${TTYDEV} --baud ${DBAUD} ${DSTD} 0xe000 ${TMPDIR}/boot_app0.bin 0x1000 ${TMPDIR}/bootloader_dio_80m.bin 0x10000 ${TMPDIR}/gfx-test.bin 0x8000 ${TMPDIR}/partitions.bin
 	    fi
-	    ${TMPDIR}/esptool.py --chip esp32 --port ${TTYDEV} --baud ${DBAUD} ${DSTD} 0xe000 ${TMPDIR}/boot_app0.bin 0x1000 ${TMPDIR}/bootloader_dio_80m.bin 0x10000 ${TMPDIR}/esp32de_${BUILDVER}.bin 0x8000 ${TMPDIR}/partitions.bin
+	    if [ "${1}" = "stage2" ]; then
+		wget -q ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/${MAC}/esp32de_${BUILDVER}.bin
+		if ! [ -e esp32de_${BUILDVER}.bin ]; then
+		    echo -e "${fred}Unfortunately something went wrong!${freset}"
+		    echo -e "${fred}Possible causes:${freset}"
+		    echo -e "${fred}- Missing files, busy server, drunken Webmaster. Call forum.${freset}"
+		    echo -e "${fred}- You aren't a registered user. Call forum and register.${freset}"
+		    echo -e "${fred}\nMAC address: ${MAC}${freset}"
+		    exit 255
+		fi
+		${TMPDIR}/esptool.py --chip esp32 --port ${TTYDEV} --baud ${DBAUD} ${DSTD} 0xe000 ${TMPDIR}/boot_app0.bin 0x1000 ${TMPDIR}/bootloader_dio_80m.bin 0x10000 ${TMPDIR}/esp32de_${BUILDVER}.bin 0x8000 ${TMPDIR}/partitions.bin
+	    fi
 	    ;;
     esac
     echo "------------------------------------------------------------------------"
@@ -30,7 +36,7 @@ flashesp() {
 }
 
 checkesp() {
-    MAC=$(${TMPDIR}/esptool.py --chip esp32 --port ${TTYDEV} --baud ${DBAUD} flash_id | grep MAC | awk '{print $2}')
+    MAC=$(${TMPDIR}/esptool.py --chip esp32 --port ${TTYDEV} --baud ${DBAUD} --after no_reset flash_id | grep MAC | awk '{print $2}')
     MAC=${MAC^^}
 }
 
@@ -114,8 +120,11 @@ if [ "${1}" = "FORCE" ]; then
     echo -e "${fred}FORCED UPDATE${freset}"
     echo -e "${fyellow}Version of your tty2tft device is ${fblue}${SWver}${fyellow}, forced BUILDVER is ${fgreen}${BUILDVER}${fyellow}.${freset}"
     echo -e "${fyellow}MCUtype is set to ${fblue}${MCUtype}${freset}"
-    flashesp
+    flashesp stage2
     [ "${INITSTOPPED}" = "yes" ] && ${INITSCRIPT} start
+elif [ "${1}" = "TEST" ]; then
+    echo -e "${fred}1st Test of your setup${freset}"
+    flashesp stage1
 else
     if [[ "${SWver}" < "${BUILDVER}" ]]; then
 	echo -e "${fyellow}Version of your tty2tft device is ${fblue}${SWver}${fyellow}, but BUILDVER is ${fgreen}${BUILDVER}${fyellow}.${freset}"
@@ -123,7 +132,7 @@ else
 	yesno 9
 	if [ "${KEY}" = "y" ]; then
 	    echo "Updating tty2tft" > /dev/ttyUSB0
-	    flashesp
+	    flashesp stage2
 	fi
     elif [[ "${SWver}" > "${BUILDVER}" ]]; then
 	if [ "${SWver: -1}" = "T" ]; then
@@ -132,7 +141,7 @@ else
 	    yesno 9
 	    if [ "${KEY}" = "y" ]; then
 		echo "Downgrading tty2tft" > /dev/ttyUSB0
-		flashesp
+		flashesp stage2
 	    fi
 	fi
 	[ "${INITSTOPPED}" = "yes" ] && ! [ "${1}" = "UPDATER" ] && ${INITSCRIPT} start
