@@ -1,20 +1,23 @@
-Libs:
-- TJpg_Decoder
-- TFT_eSPI
-- U8g2_for_TFT_eSPI
+*A Display Add-on for the **[MiSTer FPGA]**.*
 
-Arduino IDE Board Type: ESP32dev
+<br>
+<img src = pictures/oled_tft.gif align = left>
+<br><br><br>
 
+<div align = right>
+<div align = center>
 
-Den /jpg/ Ordner auf eine FAT32-Karte draufkopieren und für WLAN wifisetup.h editieren.
+This project is the successor of Venice's famous [tty2oled](https://github.com/venice1200/MiSTer_tty2oled/), <br>
+based on a ESP32 in Arduino MEGA format and a appropriate <br>
+8-bit-bus **TFT** display as a shield. This setup can play <br>
+JPG pictures and MJPEG videos from SD card, optional Wifi.
 
+</div>
+</div>
 
+---
+[![Badge License]][License]
+<!----------------------------------------------------------------------------->
 
-Installation of ESP32:
-wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- IDENTIFY
+[MiSTer FPGA]: https://github.com/MiSTer-devel
 
-Update of ESP32:
-wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash
-
-Installation of MiSTer software:
-wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/update_tty2tft.sh -O - | bash
