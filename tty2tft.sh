@@ -53,6 +53,9 @@ setscreensaver() {
   if [ "${SCREENSAVER}" = "yes" ]; then
     dbug "Sending: CMDSAVER,${SCREENSAVER_START},${SCREENSAVER_IVAL}"
     echo "CMDSAVER,${SCREENSAVER_START},${SCREENSAVER_IVAL}" > ${TTYDEV}	# Set screensaver
+  else
+    dbug "Sending: CMDSAVER,0,0"
+    echo "CMDSAVER,0,0" > ${TTYDEV}						# Disable screensaver
   fi
 }
 

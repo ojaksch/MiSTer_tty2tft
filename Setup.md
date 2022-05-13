@@ -6,7 +6,7 @@ Follow the instructions below. Don't continue with the next step if something wo
 Call for help first.
 
 - Copy the **content** of *SD_card_content* to a reliable SD card <32GB. While beeing there you can fill up the subdirectorys with your own content.
-The file **wifi.txt** is a two-liner text file containing your WiFi credentials. Only needed if you want to use WiFi, otherwise leave it as it is.
+The file **wifi.txt** is a three-liner text file containing your WiFi credentials and an URL for online picture access. Only needed if you want to use WiFi, otherwise leave it as it is.
 When editing, use an editor capable of Linux linebreaks, like notepad++ (Windows).
 
 - Open a ssh-shell to your MiSTer or open a console at MiSTer and logon.

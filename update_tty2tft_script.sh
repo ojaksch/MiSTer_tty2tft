@@ -27,14 +27,17 @@
 . /media/fat/tty2tft/tty2tft-system.ini
 . /media/fat/tty2tft/tty2tft-user.ini
 
+
 # Check for and create tty2tft script folder
 [[ -d ${TTY2TFT_PATH} ]] && cd ${TTY2TFT_PATH} || mkdir ${TTY2TFT_PATH}
+
 
 # Check and remount root writable if neccessary
 if [ $(/bin/mount | head -n1 | grep -c "(ro,") = 1 ]; then
   /bin/mount -o remount,rw /
   MOUNTRO="true"
 fi
+
 
 # Check for and create tty2tft script folder
 [[ -d ${TTY2TFT_PATH} ]] || mkdir ${TTY2TFT_PATH}
@@ -54,6 +57,7 @@ if [ $(grep -c "tty2tft" ${USERSTARTUP}) = "0" ]; then
   echo -e "\n# Startup tty2tft" >> ${USERSTARTUP}
   echo -e "[[ -e ${INITSCRIPT} ]] && ${INITSCRIPT} \$1" >> ${USERSTARTUP}
 fi
+
 
 # init script
 wget ${NODEBUG} "${REPOSITORY_URL}/S60tty2tft" -O /tmp/S60tty2tft
@@ -94,9 +98,21 @@ elif ! cmp -s /tmp/${DAEMONNAME} ${DAEMONSCRIPT}; then
 fi
 [[ -f /tmp/${DAEMONNAME} ]] && rm /tmp/${DAEMONNAME}
 
+
+# UDEV rule
+wget ${NODEBUG} "${REPOSITORY_URL}/80-ttyusb.rules.example" -O /tmp/80-ttyusb.rules.example
+if ! cmp -s /tmp/80-ttyusb.rules.example ${TTY2TFT_PATH}/80-ttyusb.rules.example; then
+  mv /tmp/80-ttyusb.rules.example ${TTY2TFT_PATH}/80-ttyusb.rules.example
+fi
+if [ -e ${TTY2TFT_PATH}/80-ttyusb.rules ] && ! [ -e /etc/udev/rules.d/80-ttyusb.rules ]; then
+  cp -a ${TTY2TFT_PATH}/80-ttyusb.rules /etc/udev/rules.d/80-ttyusb.rules
+fi
+
+
 # Download the installer to check esp firmware
 cd /tmp
 [ "${TTY2TFT_UPDATE}" = "yes" ] && bash <(wget -qO- ${REPOSITORY_URL}/installer.sh) UPDATER
+
 
 # Check and remount root non-writable if neccessary
 [ "${MOUNTRO}" = "true" ] && /bin/mount -o remount,ro /
