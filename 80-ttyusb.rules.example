@@ -1,4 +1,5 @@
-# udevadm info -a -n /dev/ttyUSB0
+# UDEV rule for using more than one display
+# gather info about device(s) with   udevadm info -a -n /dev/ttyUSB0
 #
 #KERNEL=="ttyUSB?", ATTRS{bcdDevice}=="0264", SYMLINK+="tty2oled"
 #KERNEL=="ttyUSB?", ATTRS{bcdDevice}=="0254", SYMLINK+="tty2tft"
