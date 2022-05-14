@@ -24,7 +24,7 @@ dbug() {
 sendrotation() {
   if ! [ "${ROTATE}" = "no" ]; then
     dbug "Sending: CMDROT,${ROTATE}"
-    echo "CMDROT,${ROTATE}" > ${TTYDEV}							# Send Rotation if set to "yes"
+    echo "CMDROT,${ROTATE}" > ${TTYDEV}						# Send Rotation if set to "yes"
     sleep ${WAITSECS}
     echo "CMDSORG" > ${TTYDEV}							# Show Start Screen rotated
     sleep 4
@@ -33,7 +33,6 @@ sendrotation() {
 
 # USB Send-Picture-Data function
 senddata() {
-  . /media/fat/tty2tft/tty2tft-system.ini					# ReRead INI for changes
   . /media/fat/tty2tft/tty2tft-user.ini						# ReRead INI for changes
   echo "CMDCOR,${1}" > ${TTYDEV}						# Instruct the device to load the appropriate picture from SD card
 }
