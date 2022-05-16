@@ -1,5 +1,3 @@
-# **DOCUMENT IS WIP**
-
 Ready to rumble?
 
 Follow the instructions below. Don't continue with the next step if something won't run, is showing errors or doing something unexpected/weired.
