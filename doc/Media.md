@@ -5,7 +5,7 @@ smaller, the better, but a filesize around 35kb is ok, too. That's all.
 
 When a core is setting it's MAME setname, tty2tft is working as follows:  
 At first tty2tft is looking for a file of the same (set-) name. If one is found tty2tft looks if there's 
-also a video of that name (if activated) and plays the video first, then the picture as a "photo frame". 
+also a video of that name and plays the video first (if activated), then the picture as a "photo frame". 
 When a file is found tty2tft also looks if there are alternative names, like "qbert_alt1" (up to _alt5) and 
 dices out which to play/show.
 A video is played only if a) this function is activated and b) there's also a picture of that name.
