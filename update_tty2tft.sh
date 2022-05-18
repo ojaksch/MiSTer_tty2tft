@@ -31,9 +31,9 @@ REPOSITORY_URL="https://raw.githubusercontent.com/ojaksch/MiSTer_tty2tft/main"
 SCRIPTNAME="/tmp/update_tty2tft_script.sh"
 NODEBUG="-q -o /dev/null"
 
-echo -e "\n +----------+";
+echo -e "\n +---------+";
 echo -e " | ${fblue}tty2tft${freset} |---[]";
-echo -e " +----------+\n";
+echo -e " +---------+\n";
 
 check4error() {
   case "${1}" in
