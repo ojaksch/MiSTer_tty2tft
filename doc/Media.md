@@ -1,4 +1,4 @@
-JPG pictures must be 320x240 pixels in size and should be saved with around 60 percent in compression to achieve 
+JPG pictures must be 320x240 pixels in size and should be saved as non-progressive with around 60 percent in compression to achieve 
 a good compromise between quality and filesize (=loading time). A filesize around 20kb is fine, the 
 smaller, the better, but a filesize around 35kb is ok, too. That's all.
 
