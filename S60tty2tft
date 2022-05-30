@@ -15,10 +15,19 @@ start() {
     while !  [ -c ${TTYDEV} ] && [ ${SECONDS} -lt ${WAITEND} ]; do
       sleep 0.1
     done
+    if ! [ -c ${TTYDEV} ]; then
+      echo "Could not find the needed USB module ${TTYDEV}. Exiting."
+      exit 1
+    fi
 
     if [[ -x ${DAEMONSCRIPT} ]]; then
-      echo "Starting ${DAEMONNAME}..."
-      ${DAEMONSCRIPT} & echo $! > /run/tty2tft-daemon.pid
+      if [ -e /run/tty2tft-daemon.pid ] && [ -d /proc/$(</run/tty2tft-daemon.pid) ]; then
+	echo "${DAEMONNAME} already running"
+	exit 1
+      else
+	echo "Starting ${DAEMONNAME}..."
+	${DAEMONSCRIPT} & echo $! > /run/tty2tft-daemon.pid
+      fi
     else
       echo "${DAEMONSCRIPT} not found!"
     fi
@@ -27,10 +36,11 @@ start() {
 # Stop
 stop() {
     echo "Stopping ${DAEMONNAME}..."
-    PIDDAEMON=$(</run/tty2tft-daemon.pid)
-    PIDINOTIFY=$(</run/tty2tft-inotify.pid)
-    kill ${PIDDAEMON} ${PIDINOTIFY}
-    rm /run/tty2tft-daemon.pid /run/tty2tft-inotify.pid
+    [ -e /run/tty2tft-daemon.pid ] && PIDDAEMON=$(</run/tty2tft-daemon.pid)
+    [ -e /run/tty2tft-inotify.pid ] && PIDINOTIFY=$(</run/tty2tft-inotify.pid)
+    [ ${PIDDAEMON} ] && kill ${PIDDAEMON}
+    [ ${PIDINOTIFY} ] && kill ${PIDINOTIFY}
+    rm -f /run/tty2tft-daemon.pid /run/tty2tft-inotify.pid
 }
 
 case "$1" in

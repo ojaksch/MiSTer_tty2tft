@@ -93,14 +93,14 @@ if [ -c "${TTYDEV}" ]; then							# check for tty device
 	setscreensaver								# Reenable screensaver, if emabled
       fi									# end if core check
       if [ "${debug}" = "false" ]; then
-        # wait here for next change of corename, -qq for quietness
-        inotifywait -qq -e modify "${corenamefile}" & echo $! > /run/tty2tft-inotify.pid
-        while [ -d /proc/$(</run/tty2tft-inotify.pid) ] ; do true; done
+	# wait here for next change of corename, -qq for quietness
+	inotifywait -qq -e modify "${corenamefile}" & echo $! > /run/tty2tft-inotify.pid
+	while [ -d /proc/$(</run/tty2tft-inotify.pid) ] ; do true; done
       fi
       if [ "${debug}" = "true" ]; then
-        # but not -qq when debugging
-        inotifywait -e modify "${corenamefile}" & echo $! > /run/tty2tft-inotify.pid
-        while [ -d /proc/$(</run/tty2tft-inotify.pid) ] ; do true; done
+	# but not -qq when debugging
+	inotifywait -e modify "${corenamefile}" & echo $! > /run/tty2tft-inotify.pid
+	while [ -d /proc/$(</run/tty2tft-inotify.pid) ] ; do true; done
       fi
     else									# CORENAME file not found
      dbug "File ${corenamefile} not found!"
