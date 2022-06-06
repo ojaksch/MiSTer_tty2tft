@@ -1,13 +1,13 @@
 
-[list]220605 - Enable FTP only if WiFi is enabled too[/list]
-[list]220604 - Include a FTP server, change SD's directory structure, variables cleanups[/list]
-[list]220521 - CMDTXT with background color[/list]
-[list]220520 - Include u8g2, CMDTXT for text functions[/list]
-[list]220517 - Change filehandle from fs;; to SD[/list]
-[list]220516 - Tests with SDfat[/list]
-[list]220515 - Code cleanups[/list]
-[list]220514 - Changes to WiFi variables and routines[/list]
-[list]220501 - Work on the screensaver function(s)[/list]
-[list]n/a    - Include Cron for screensaver function(s)[/list]
-[list]220211 - Include RTC[/list]
-[list]220126 - Improvement and standardization of variables[/list]
+- 220605 - Enable FTP only if WiFi is enabled too
+- 220604 - Include a FTP server, change SD's directory structure, variables cleanups
+- 220521 - CMDTXT with background color
+- 220520 - Include u8g2, CMDTXT for text functions
+- 220517 - Change filehandle from fs;; to SD
+- 220516 - Tests with SDfat
+- 220515 - Code cleanups
+- 220514 - Changes to WiFi variables and routines
+- 220501 - Work on the screensaver function(s)
+- n/a    - Include Cron for screensaver function(s)
+- 220211 - Include RTC
+- 220126 - Improvement and standardization of variables
