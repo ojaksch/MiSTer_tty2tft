@@ -1,5 +1,6 @@
 
-- 220606 - Auto define display's width/height by used displaytype
+- 220607 - Autocalculate positions of media depending on displays dimension
+- 220606 - Autodefine display's width/height by used displaytype
 - 220605 - Enable FTP only if WiFi is enabled too
 - 220604 - Include a FTP server, change SD's directory structure, variables cleanups
 - 220521 - CMDTXT with background color
