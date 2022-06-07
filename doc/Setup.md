@@ -5,7 +5,9 @@ Ready to rumble?
 # Hardware
 
 You need an [ESP32 D1 R32 and an ILI9341 8-bit bus display](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/d1r32-ili9341.jpg). 
-Other 8-bit bus displays should also work (according to librarys documentation), ~~-but are untested~~-  *EDIT 2022-06:* HX8347D succesfully tested, many many thanks to Salamantecas!  
+Other 8-bit bus displays should also work (according to librarys documentation), ~~-but are untested~~-  
+- 2022-06: ILI9486 succesfully tested by Salamantecas
+- 2022-06: HX8347D succesfully tested, many many thanks to Salamantecas!  
 The ESP needs a [small modifictaion consisting of three cables](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/d1r32-mod.jpg). 
 ([Source](https://github.com/Bodmer/TFT_eSPI#8-bit-parallel-support))  
 
