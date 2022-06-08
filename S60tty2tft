@@ -20,11 +20,11 @@ start() {
       exit 1
     fi
 
-    echo "CMDHWINF" > ${TTYDEV} ; read -t5 HWINF < ${TTYDEV}
-    case "${HWINF}" in
-      "")  echo "Couldn't gather hardware info. Exiting."
-	   exit 1
-	   ;;
+#    echo "CMDHWINF" > ${TTYDEV} ; read -t5 HWINF < ${TTYDEV}
+#    case "${HWINF}" in
+#      "")  echo "Couldn't gather hardware info. Exiting."
+#	   exit 1
+#	   ;;
       
 
 
