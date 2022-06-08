@@ -25,8 +25,7 @@ start() {
       "")	echo "Couldn't gather hardware info. Exiting."
 		exit 1
 		;;
-      TFTESP32)	break
-		;;
+      TFTESP32)	;;
       *)	echo "CMDCLS" > ${TTYDEV}
 		echo "CMDTXT,3,15,0,1,40,Wrong Device Detected" > ${TTYDEV}
 		exit 1
