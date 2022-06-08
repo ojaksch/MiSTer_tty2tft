@@ -10,7 +10,7 @@ cd ${TMPDIR}
 flashesp() {
     echo "------------------------------------------------------------------------"
     case "${MCUtype}" in
-	HWESP32DE)
+	TFTESP32)
 	    if [ "${1}" = "stage1" ]; then
 		wget -q ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin.org ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/gfx-test.bin
 		${TMPDIR}/esptool.py --chip esp32 --port ${TTYDEV} --baud ${DBAUD} ${DSTD} 0xe000 ${TMPDIR}/boot_app0.bin 0x1000 ${TMPDIR}/bootloader_dio_80m.bin.org 0x10000 ${TMPDIR}/gfx-test.bin 0x8000 ${TMPDIR}/partitions.bin
@@ -88,7 +88,7 @@ if [[ -c ${TTYDEV} ]]; then
     echo -en "${freset}Trying to identify device... ${freset}"
     echo "CMDHWINF" > ${TTYDEV} ; read -t5 BLA < ${TTYDEV}
     if [[ ${?} > 1 ]] && [ -z "${BLA}" ]; then
-	MCUtype="HWESP32DE"
+	MCUtype="TFTESP32"
 	SWver="0"
 	checkesp
     else
@@ -107,7 +107,7 @@ fi
 # Check for MCU
 case "${MCUtype}" in
     Exit)	exit 0 ;;
-    HWESP32DE)	echo -e "${fyellow}ESP32 selected/detected.${freset}" ;;
+    TFTESP32)	echo -e "${fyellow}ESP32 selected/detected.${freset}" ;;
 esac
 
 if [ "${1}" = "IDENTIFY" ]; then
