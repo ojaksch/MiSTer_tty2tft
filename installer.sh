@@ -12,8 +12,8 @@ flashesp() {
     case "${MCUtype}" in
 	HWESP32DE)
 	    if [ "${1}" = "stage1" ]; then
-		wget -q ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/gfx-test.bin
-		${TMPDIR}/esptool.py --chip esp32 --port ${TTYDEV} --baud ${DBAUD} ${DSTD} 0xe000 ${TMPDIR}/boot_app0.bin 0x1000 ${TMPDIR}/bootloader_dio_80m.bin 0x10000 ${TMPDIR}/gfx-test.bin 0x8000 ${TMPDIR}/partitions.bin
+		wget -q ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin.org ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/gfx-test.bin
+		${TMPDIR}/esptool.py --chip esp32 --port ${TTYDEV} --baud ${DBAUD} ${DSTD} 0xe000 ${TMPDIR}/boot_app0.bin 0x1000 ${TMPDIR}/bootloader_dio_80m.bin.org 0x10000 ${TMPDIR}/gfx-test.bin 0x8000 ${TMPDIR}/partitions.bin
 	    fi
 	    if [ "${1}" = "stage2" ]; then
 		wget -q ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/${MAC}/esp32de_${BUILDVER}.bin
