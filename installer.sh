@@ -92,9 +92,9 @@ if [[ -c ${TTYDEV} ]]; then
 	SWver="0"
 	checkesp
     else
-	MCUtype="${BLA:0:9}"
-	SWver="${BLA:10:6}"
-	MAC="${BLA:17:17}"
+	MCUtype="${BLA:0:8}"
+	SWver="${BLA:9:6}"
+	MAC="${BLA:16:17}"
 	if [ "${MCUtype:0:2}" = "HW" ]; then
 	    echo -e "${fgreen}${MCUtype} with sketch version ${SWver}${freset}"
 	fi
