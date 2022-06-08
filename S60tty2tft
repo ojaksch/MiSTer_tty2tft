@@ -20,17 +20,18 @@ start() {
       exit 1
     fi
 
-#    echo "CMDHWINF" > ${TTYDEV} ; read -t5 HWINF < ${TTYDEV}
-#    case "${HWINF}" in
-#      "")  echo "Couldn't gather hardware info. Exiting."
-#	   exit 1
-#	   ;;
-      
-
-
-    if [ "${HWINF}" = "" ]
-    fi
-
+    echo "CMDHWINF" > ${TTYDEV} ; read -t5 HWINF < ${TTYDEV}
+    case "${HWINF:0:8}" in
+      "")	echo "Couldn't gather hardware info. Exiting."
+		exit 1
+		;;
+      TFTESP32)	break
+		;;
+      *)	echo "CMDCLS" > ${TTYDEV}
+		echo "CMDTXT,3,15,0,1,40,Wrong Device Detected" > ${TTYDEV}
+		exit 1
+		;;
+    esac
 
     if [[ -x ${DAEMONSCRIPT} ]]; then
       if [ -e /run/tty2tft-daemon.pid ] && [ -d /proc/$(</run/tty2tft-daemon.pid) ]; then
