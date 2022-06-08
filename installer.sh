@@ -79,7 +79,7 @@ if ! [ -f ${TMPDIR}/esptool.py ]; then
     chmod +x ${TMPDIR}/esptool.py
 fi
 
-# Check if interface ttyUSB0 is present
+# Check if interface tty* device is present
 echo -en "${freset}Checking for device at ${TTYDEV}${freset}: "
 if [[ -c ${TTYDEV} ]]; then
     stty -F ${TTYDEV} ${BAUDRATE} ${TTYPARAM}
@@ -131,7 +131,7 @@ else
 	echo -en "${fyellow}Do you want to Update? Use Cursor or Joystick for ${fgreen}YES=UP${freset} / ${fred}NO=DOWN${fyellow}. Countdown: 9${freset}"
 	yesno 9
 	if [ "${KEY}" = "y" ]; then
-	    echo "Updating tty2tft" > /dev/ttyUSB0
+	    echo "Updating tty2tft" > ${TTYDEV}
 	    flashesp stage2
 	fi
     elif [[ "${SWver}" > "${BUILDVER}" ]]; then
@@ -140,7 +140,7 @@ else
 	    echo -en "${fyellow}Do you want to Downgrade? Use Cursor or Joystick for ${fgreen}YES=UP${freset} / ${fred}NO=DOWN${fyellow}. Countdown: 9${freset}"
 	    yesno 9
 	    if [ "${KEY}" = "y" ]; then
-		echo "Downgrading tty2tft" > /dev/ttyUSB0
+		echo "Downgrading tty2tft" > ${TTYDEV}
 		flashesp stage2
 	    fi
 	fi
