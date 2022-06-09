@@ -37,7 +37,7 @@ If flash happened successfuly and demo works, just continue - otherwise stop her
 
 - Type in the following line:  
 `wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- IDENTIFY`  
-This gives you the MAC address of your ESP device. Tell me that MAC address. Keep the session/console open.
+This gives you the MAC address of your ESP device. Tell me that MAC address and your used display type (see **Hardware** above). Keep the session/console open.
 
 - I'll create a "repository" especially for you depending on your MAC and will give you an OK then. This means STOP HERE AND WAIT. Take a break. Get a coffee.
 
