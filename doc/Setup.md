@@ -29,8 +29,8 @@ When editing, use an editor capable of Linux linebreaks, like notepad++ (Windows
 
 - We will do a quick first test to see that everythins is working / to ensure ESP32 and display are working together. Type in the following line:
 for ILI9341: `wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- TEST-ILI9341`  
-for ILI9486: `wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- TEST-ILI9486` ..
-This will flash a simple and looping graphics demo.  
+for ILI9486: `wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- TEST-ILI9486`  
+This will flash a simple and looping graphics demo.   
 If you see a message while flashing like
 > WARNING: Failed to communicate with the flash chip...
 
