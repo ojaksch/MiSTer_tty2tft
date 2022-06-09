@@ -20,6 +20,7 @@ start() {
       exit 1
     fi
 
+#    echo "CMDSAVER,0,0" > ${TTYDEV}
 #    echo "CMDHWINF" > ${TTYDEV} ; read -t5 HWINF < ${TTYDEV}
 #    case "${HWINF:0:8}" in
 #      "")	echo "Couldn't gather hardware info. Exiting."
