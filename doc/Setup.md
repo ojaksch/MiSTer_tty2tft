@@ -12,6 +12,8 @@ Other 8-bit bus displays should also work (according to librarys documentation),
 The ESP needs a [small modifictaion consisting of three cables](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/d1r32-mod.jpg). 
 ([Source](https://github.com/Bodmer/TFT_eSPI#8-bit-parallel-support))  
 
+Keep in mind that the ESP32 is using WiFi@2.4 GHz only.
+
 That's all!
 
 

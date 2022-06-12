@@ -1,7 +1,8 @@
-JPG pictures must be 320x240 pixels in size and should be saved as non-progressive with around 60 percent in compression to achieve 
+JPG pictures must be 320x240 (ILI9341, HX8347D)or 480x320 (ILI9486) pixels in size and should be saved as non-progressive with around 60 percent in compression to achieve 
 a good compromise between quality and filesize (=loading time). A filesize around 20kb is fine, the 
 smaller, the better, but a filesize around 35kb is ok, too. That's all.
 
+Same goes for the MJPEG videos. Example scripts will follow.
 
 When a core is setting it's MAME setname, tty2tft is working as follows:  
 At first tty2tft is looking for a file of the same (set-) name. If one is found tty2tft looks if there's 
