@@ -1,4 +1,5 @@
 
+- 220614 - Display driver for ILI9486 fixed
 - 220608 - Change CMDHWINF to a more unique name
 - 220607 - Autocalculate positions of media depending on displays dimension
 - 220606 - Autodefine display's width/height by used displaytype

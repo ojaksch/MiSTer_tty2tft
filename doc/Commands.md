@@ -8,7 +8,7 @@
 | CMDDINVOFF              | Invert screen off (ILI9341 only) |
 | CMDRESET                | Restart ESP |
 | CMDSNAM                 | Show picture's name |
-| CMDROT,PARAM            | Rotate screen (0=none,1=90°,2=180°,1=90°,3=270°) |
+| CMDROT,PARAM            | Rotate screen (0=none/Portrait, 1=90°/Landscape, 2=180°, 3=270°) |
 | CMDDUPD                 | Refresh screen |
 | CMDDELETE               | Delete actual picture/video from SD |
 | CMDUPLOAD,URL           | Upload file from <URL> |
