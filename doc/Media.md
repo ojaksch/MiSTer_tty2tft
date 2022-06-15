@@ -17,3 +17,4 @@ Another example: The is a hypothetical core/game named qbertfixed without a pict
 name to qbertfixe, then qbertfix, then qbertfi, then qbertf, then qbert and voila! there it is. Got it?
 
 You can access your device by FTP using a FTP program like FileZilla (recommended!) to organise your SD's content. Username and passwort is "esp32" (without quotes).
+Limit the "parallel connections" to "1" for this connection.
