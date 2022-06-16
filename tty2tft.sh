@@ -52,6 +52,8 @@ setscreensaver() {
   if [ "${SCREENSAVER}" = "yes" ]; then
     dbug "Sending: CMDSAVER,${SCREENSAVER_START},${SCREENSAVER_IVAL}"
     echo "CMDSAVER,${SCREENSAVER_START},${SCREENSAVER_IVAL}" > ${TTYDEV}	# Set screensaver
+    sleep 0.02
+    echo "CMDSAVEROPTS,${SCREENSAVER_AMPM},${SCREENSAVER_TEXT},${SCREENSAVER_PICT}" > ${TTYDEV}		# Set screensaver options
   else
     dbug "Sending: CMDSAVER,0,0"
     echo "CMDSAVER,0,0" > ${TTYDEV}						# Disable screensaver
@@ -95,12 +97,12 @@ if [ -c "${TTYDEV}" ]; then							# check for tty device
       if [ "${debug}" = "false" ]; then
 	# wait here for next change of corename, -qq for quietness
 	inotifywait -qq -e modify "${corenamefile}" & echo $! > /run/tty2tft-inotify.pid
-	while [ -d /proc/$(</run/tty2tft-inotify.pid) ] ; do true; done
+	while [ -d /proc/$(</run/tty2tft-inotify.pid) ] ; do sleep 0.2; done
       fi
       if [ "${debug}" = "true" ]; then
 	# but not -qq when debugging
 	inotifywait -e modify "${corenamefile}" & echo $! > /run/tty2tft-inotify.pid
-	while [ -d /proc/$(</run/tty2tft-inotify.pid) ] ; do true; done
+	while [ -d /proc/$(</run/tty2tft-inotify.pid) ] ; do sleep 0.2; done
       fi
     else									# CORENAME file not found
      dbug "File ${corenamefile} not found!"
