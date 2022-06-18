@@ -1,4 +1,5 @@
 
+- 220617 - Internal changes to the jpeg routine(s), which saved some kb; added dirletter for fetchfile; dirletter to uppercase
 - 220616 - Complete overhauled screensaver
 - 220615 - Show MENU.jpg (if available) instead of Sorgelig's cat
 - 220614 - Display driver for ILI9486 fixed

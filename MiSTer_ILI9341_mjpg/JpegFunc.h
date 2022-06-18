@@ -14,8 +14,7 @@ static File _f;
 //static File32 _f;
 static int _x, _y, _x_bound, _y_bound;
 
-static void *jpegOpenFile(const char *szFilename, int32_t *pFileSize)
-{
+static void *jpegOpenFile(const char *szFilename, int32_t *pFileSize) {
     // Serial.println("jpegOpenFile");
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
     _f = SD.open(szFilename, "r");
@@ -38,15 +37,13 @@ static void *jpegOpenFile(const char *szFilename, int32_t *pFileSize)
     return &_f;
 }
 
-static void jpegCloseFile(void *pHandle)
-{
+static void jpegCloseFile(void *pHandle) {
     // Serial.println("jpegCloseFile");
     File *f = static_cast<File *>(pHandle);
     f->close();
 }
 
-static int32_t jpegReadFile(JPEGFILE *pFile, uint8_t *pBuf, int32_t iLen)
-{
+static int32_t jpegReadFile(JPEGFILE *pFile, uint8_t *pBuf, int32_t iLen) {
     // Serial.printf("jpegReadFile, iLen: %d\n", iLen);
     File *f = static_cast<File *>(pFile->fHandle);
     size_t r = f->read(pBuf, iLen);
@@ -63,8 +60,7 @@ static int32_t jpegSeekFile(JPEGFILE *pFile, int32_t iPosition)
 
 static void jpegDraw(
     const char *filename, JPEG_DRAW_CALLBACK *jpegDrawCallback, bool useBigEndian,
-    int x, int y, int widthLimit, int heightLimit)
-{
+    int x, int y, int widthLimit, int heightLimit, int _scale) {
     _x = x;
     _y = y;
     _x_bound = _x + widthLimit - 1;
@@ -73,33 +69,24 @@ static void jpegDraw(
     _jpeg.open(filename, jpegOpenFile, jpegCloseFile, jpegReadFile, jpegSeekFile, jpegDrawCallback);
 
     // scale to fit height
-    int _scale;
     int iMaxMCUs;
-    float ratio = (float)_jpeg.getHeight() / heightLimit;
-    if (ratio <= 1)
-    {
-        _scale = 0;
-        iMaxMCUs = widthLimit / 16;
+    if (_scale == 0) {
+	_scale = 0;
+	iMaxMCUs = widthLimit / 16;
+    } else if (_scale == 2) {
+	_scale = JPEG_SCALE_HALF;
+	iMaxMCUs = widthLimit / 8;
+    } else if (_scale == 4) {
+	_scale = JPEG_SCALE_QUARTER;
+	iMaxMCUs = widthLimit / 4;
+    } else if (_scale == 8) { 
+	_scale = JPEG_SCALE_EIGHTH;
+	iMaxMCUs = widthLimit / 2;
     }
-    else if (ratio <= 2)
-    {
-        _scale = JPEG_SCALE_HALF;
-        iMaxMCUs = widthLimit / 8;
-    }
-    else if (ratio <= 4)
-    {
-        _scale = JPEG_SCALE_QUARTER;
-        iMaxMCUs = widthLimit / 4;
-    }
-    else
-    {
-        _scale = JPEG_SCALE_EIGHTH;
-        iMaxMCUs = widthLimit / 2;
-    }
+
     _jpeg.setMaxOutputSize(iMaxMCUs);
-    if (useBigEndian)
-    {
-        _jpeg.setPixelType(RGB565_BIG_ENDIAN);
+    if (useBigEndian) {
+	_jpeg.setPixelType(RGB565_BIG_ENDIAN);
     }
     _jpeg.decode(x, y, _scale);
     _jpeg.close();
