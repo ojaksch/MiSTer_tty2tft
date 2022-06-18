@@ -15,8 +15,7 @@ The ESP needs a [small modifictaion consisting of three cables](https://github.c
 **Notices:**
 - It turned out that a 480x320 display looks great with pictures, but is somewhat too "slow" to play MJPEG videos really fluently. This is stated by the facts 
 that MJPEG isn't a videostream...it's a series of single jpg's in one file that are played one after the other and are always shown at 25fps. Keep in mind that a 
-480x320 display has a 2.5x resolution of a 320x200 one, so it also has to transfer 2.5 times of data - at same clock speed.
-
+480x320 display has a 2.5x resolution of a 320x200 one, so it also has to transfer 2.5 times of data - at same clock speed.  
 As a result, my personal recommendation is a 320x200 for pictures **and** videos - or a 480x320 for pictures (and videos if a bit stuttering is acceptable).
 
 - Keep in mind that the ESP32 is using WiFi@2.4 GHz only.
