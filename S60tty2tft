@@ -20,19 +20,6 @@ start() {
       exit 1
     fi
 
-#    echo "CMDSAVER,0,0" > ${TTYDEV}
-#    echo "CMDHWINF" > ${TTYDEV} ; read -t5 HWINF < ${TTYDEV}
-#    case "${HWINF:0:8}" in
-#      "")	echo "Couldn't gather hardware info. Exiting."
-#		exit 1
-#		;;
-#      TFTESP32)	;;
-#      *)	echo "CMDCLS" > ${TTYDEV}
-#		echo "CMDTXT,3,15,0,1,40,Wrong Device Detected" > ${TTYDEV}
-#		exit 1
-#		;;
-#    esac
-
     if [[ -x ${DAEMONSCRIPT} ]]; then
       if [ -e /run/tty2tft-daemon.pid ] && [ -d /proc/$(</run/tty2tft-daemon.pid) ]; then
 	echo "${DAEMONNAME} already running"
@@ -49,11 +36,16 @@ start() {
 # Stop
 stop() {
     echo "Stopping ${DAEMONNAME}..."
-    [ -e /run/tty2tft-daemon.pid ] && PIDDAEMON=$(</run/tty2tft-daemon.pid)
-    [ -e /run/tty2tft-inotify.pid ] && PIDINOTIFY=$(</run/tty2tft-inotify.pid)
-    [ ${PIDDAEMON} ] && kill ${PIDDAEMON}
-    [ ${PIDINOTIFY} ] && kill ${PIDINOTIFY}
-    rm -f /run/tty2tft-daemon.pid /run/tty2tft-inotify.pid
+    if [ -e /run/tty2tft-daemon.pid ]; then
+      PIDDAEMON=$(</run/tty2tft-daemon.pid)
+      PIDINOTIFY=$(ps -eo pid,ppid,args | grep $(ps | grep tty2tft | awk 'NR==1{print $1}') | tail -1 | awk '{print $1}')
+      #[ -e /run/tty2tft-daemon.pid ] && PIDDAEMON=$(</run/tty2tft-daemon.pid)
+      #[ -e /run/tty2tft-inotify.pid ] && PIDINOTIFY=$(</run/tty2tft-inotify.pid)
+      [ ${PIDDAEMON} ] && kill ${PIDDAEMON}
+      [ ${PIDINOTIFY} ] && kill ${PIDINOTIFY}
+      rm -f /run/tty2tft-daemon.pid
+      #rm -f /run/tty2tft-daemon.pid /run/tty2tft-inotify.pid
+    fi
 }
 
 case "$1" in

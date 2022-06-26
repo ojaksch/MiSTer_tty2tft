@@ -94,15 +94,18 @@ if [ -c "${TTYDEV}" ]; then							# check for tty device
 	sendtime								# Update time and date
 	setscreensaver								# Reenable screensaver, if emabled
       fi									# end if core check
+      if [ "${PLAYSOUND}" = "yes" ] && [ -e "${SOUNDPATH}/${newcore}.mp3" ]; then mpg123 -q --no-control "${SOUNDPATH}/${newcore}.mp3"; fi
       if [ "${debug}" = "false" ]; then
 	# wait here for next change of corename, -qq for quietness
-	inotifywait -qq -e modify "${corenamefile}" & echo $! > /run/tty2tft-inotify.pid
-	while [ -d /proc/$(</run/tty2tft-inotify.pid) ] ; do sleep 0.2; done
+	#inotifywait -qq -e modify "${corenamefile}" & echo $! > /run/tty2tft-inotify.pid
+	#while [ -d /proc/$(</run/tty2tft-inotify.pid) ] ; do sleep 0.2; done
+	inotifywait -qq -e modify "${corenamefile}"
       fi
       if [ "${debug}" = "true" ]; then
 	# but not -qq when debugging
-	inotifywait -e modify "${corenamefile}" & echo $! > /run/tty2tft-inotify.pid
-	while [ -d /proc/$(</run/tty2tft-inotify.pid) ] ; do sleep 0.2; done
+	#inotifywait -e modify "${corenamefile}" & echo $! > /run/tty2tft-inotify.pid
+	#while [ -d /proc/$(</run/tty2tft-inotify.pid) ] ; do sleep 0.2; done
+	inotifywait -e modify "${corenamefile}"
       fi
     else									# CORENAME file not found
      dbug "File ${corenamefile} not found!"

@@ -80,6 +80,8 @@ fi
 [ -f "${TTY2TFT_PATH}/tty2tft.ini" ] && mv "${TTY2TFT_PATH}/tty2tft.ini" "${TTY2TFT_PATH}/tty2tft.ini.bak"
 [ -f "/media/fat/Scripts/tty2tft.ini" ] && mv "/media/fat/Scripts/tty2tft.ini" "${TTY2TFT_PATH}/tty2tft-user.ini.bak"
 
+[[ -d "${SOUNDPATH}" ]] || mkdir "${SOUNDPATH}"
+
 wget ${NODEBUG} --no-cache "${REPOSITORY_URL}/update_tty2tft_script.sh" -O "${SCRIPTNAME}"
 check4error "${?}"
 [ -s "${SCRIPTNAME}" ] && bash "${SCRIPTNAME}" "${1}"
