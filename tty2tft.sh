@@ -94,7 +94,10 @@ if [ -c "${TTYDEV}" ]; then							# check for tty device
 	sendtime								# Update time and date
 	setscreensaver								# Reenable screensaver, if emabled
       fi									# end if core check
-      if [ "${PLAYSOUND}" = "yes" ] && [ -e "${SOUNDPATH}/${newcore}.mp3" ]; then mpg123 -q --no-control "${SOUNDPATH}/${newcore}.mp3"; fi
+      if [ "${PLAYSOUND}" = "yes" ] && [ -e "${SOUNDPATH}/${newcore}."[mM][pP]3 ]; then
+	sleep ${PLAYSOUND_DELAY}
+	(&>/dev/null mpg123 -q --no-control "${SOUNDPATH}/${newcore}."[mM][pP]3 &)	# Play soundfile silently in background
+      fi
       if [ "${debug}" = "false" ]; then
 	# wait here for next change of corename, -qq for quietness
 	#inotifywait -qq -e modify "${corenamefile}" & echo $! > /run/tty2tft-inotify.pid
