@@ -53,7 +53,7 @@ setscreensaver() {
     dbug "Sending: CMDSAVER,${SCREENSAVER_START},${SCREENSAVER_IVAL}"
     echo "CMDSAVER,${SCREENSAVER_START},${SCREENSAVER_IVAL}" > ${TTYDEV}	# Set screensaver
     sleep 0.02
-    echo "CMDSAVEROPTS,${SCREENSAVER_AMPM},${SCREENSAVER_TEXT},${SCREENSAVER_PICT}" > ${TTYDEV}		# Set screensaver options
+    echo "CMDSAVEROPTS,${SCREENSAVER_AMPM},${SCREENSAVER_CLOCK},${SCREENSAVER_TEXT},${SCREENSAVER_PICT}" > ${TTYDEV}		# Set screensaver options
   else
     dbug "Sending: CMDSAVER,0,0"
     echo "CMDSAVER,0,0" > ${TTYDEV}						# Disable screensaver
