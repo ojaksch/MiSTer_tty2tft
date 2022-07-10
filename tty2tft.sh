@@ -26,14 +26,11 @@ sendrotation() {
     dbug "Sending: CMDROT,${ROTATE}"
     echo "CMDROT,${ROTATE}" > ${TTYDEV}						# Send Rotation if set to "yes"
     sleep ${WAITSECS}
-    echo "CMDSORG" > ${TTYDEV}							# Show Start Screen rotated
-    sleep 4
   fi
 }
 
 # USB Send-Picture-Data function
 senddata() {
-  . /media/fat/tty2tft/tty2tft-user.ini						# ReRead INI for changes
   echo "CMDCOR,${1}" > ${TTYDEV}						# Instruct the device to load the appropriate picture from SD card
 }
 
@@ -53,7 +50,7 @@ setscreensaver() {
     dbug "Sending: CMDSAVER,${SCREENSAVER_START},${SCREENSAVER_IVAL}"
     echo "CMDSAVER,${SCREENSAVER_START},${SCREENSAVER_IVAL}" > ${TTYDEV}	# Set screensaver
     sleep 0.02
-    echo "CMDSAVEROPTS,${SCREENSAVER_AMPM},${SCREENSAVER_CLOCK},${SCREENSAVER_TEXT},${SCREENSAVER_PICT}" > ${TTYDEV}		# Set screensaver options
+    echo "CMDSAVEROPTS,${SCREENSAVER_AMPM},${SCREENSAVER_CLOCK},${SCREENSAVER_TEXT},${SCREENSAVER_PICT},${SCREENSAVER_MOVE}" > ${TTYDEV}		# Set screensaver options
   else
     dbug "Sending: CMDSAVER,0,0"
     echo "CMDSAVER,0,0" > ${TTYDEV}						# Disable screensaver
@@ -89,10 +86,13 @@ if [ -c "${TTYDEV}" ]; then							# check for tty device
       dbug "Read CORENAME: -${newcore}-"
       if [ "${newcore}" != "${oldcore}" ]; then					# proceed only if Core has changed
 	dbug "Send -${newcore}- to ${TTYDEV}."
+	. /media/fat/tty2tft/tty2tft-user.ini					# ReRead INI for changes
 	senddata "${newcore}"							# The "Magic"
 	oldcore="${newcore}"							# update oldcore variable
 	sendtime								# Update time and date
+	setvideoplay								# Set playing of videos or not
 	setscreensaver								# Reenable screensaver, if emabled
+	sendrotation								# Set Display Rotation
       fi									# end if core check
       if [ "${PLAYSOUND}" = "yes" ] && [ -e "${SOUNDPATH}/${newcore}."[mM][pP]3 ]; then
 	sleep ${PLAYSOUND_DELAY}
