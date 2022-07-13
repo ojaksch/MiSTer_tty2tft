@@ -3,7 +3,7 @@
 REPOSITORY_URL1="https://raw.githubusercontent.com/ojaksch/MiSTer_tty2tft/main"
 REPOSITORY_URL2="https://www.tty2tft.de/MiSTer_tty2tft-installer"
 DBAUD="921600"
-DSTD="--before default_reset --after hard_reset write_flash --compress --flash_size detect"
+DSTD="--before default_reset --after hard_reset write_flash --compress --flash_mode dio --flash_freq 80m --flash_size detect"
 TMPDIR=$(mktemp -d)
 cd ${TMPDIR}
 
@@ -13,7 +13,7 @@ flashesp() {
 	TFTESP32)
 	    if [ "${1}" = "stage1" ]; then
 		wget -q ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin.org ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/${2}
-		${TMPDIR}/esptool.py --chip esp32 --port ${TTYDEV} --baud ${DBAUD} ${DSTD} 0xe000 ${TMPDIR}/boot_app0.bin 0x1000 ${TMPDIR}/bootloader_dio_80m.bin.org 0x10000 ${TMPDIR}/${2} 0x8000 ${TMPDIR}/partitions.bin
+		${TMPDIR}/esptool.py --chip esp32 --port ${TTYDEV} --baud ${DBAUD} ${DSTD} 0xe000 ${TMPDIR}/boot_app0.bin 0x1000 ${TMPDIR}/bootloader_dio_80m.bin 0x10000 ${TMPDIR}/${2} 0x8000 ${TMPDIR}/partitions.bin
 	    fi
 	    if [ "${1}" = "stage2" ]; then
 		wget -q ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/${MAC}/esp32de_${BUILDVER}.bin
