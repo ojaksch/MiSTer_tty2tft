@@ -1,6 +1,17 @@
 Ready to rumble?
 
+Table of Contents  
+[Hardware](#hardware)  
+[Software](#software)  
+[Media](#media)  
+[MJPEG](#mjpeg)  
+[The INI files](#the-ini-files)  
+[The screensaver](#the-screensaver)  
+[Commands](#commands)  
+[Color definitions](#color-definitions-used-by-the-display-driver)  
+[Bugs and things to do](#bugs-and-things-still-to-do)  
 
+---
 
 # Hardware
 
@@ -133,12 +144,13 @@ Parameters used here (also see [ffmpeg's documentation page](https://ffmpeg.org/
 
 ---
 
-This paragraph is WiP
 # The INI files
+This paragraph is WiP
 
 ---
-This paragraph is WiP
 # The screensaver
+This paragraph is WiP
+
 This is a simple watch that is displayed and wanders around on the screen.
 The time _when_ it is activated and changes it's positions is set by parameters shown below.
 We are using  `cron` for that which might be misleading (for SCREENSAVER_START) the first time as
