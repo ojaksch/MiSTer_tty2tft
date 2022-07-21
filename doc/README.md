@@ -243,3 +243,5 @@ https://misterfpga.org/viewtopic.php?p=53857#p53857~~
 
 # License
 
+![CC BY-NC-SA 4.0](../pictures/by-nc-sa.eu.png)  
+[Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
