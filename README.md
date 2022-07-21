@@ -12,11 +12,11 @@ appropriate 8-bit-bus **TFT** display as a shield. <br>
 This setup plays JPG pictures and MJPEG videos <br>
 from SD card, optional downloading via WiFi.
 
+Head over to the [documentation folder](https://github.com/ojaksch/MiSTer_tty2tft/tree/main/doc) or directly to [how to set it up](https://github.com/ojaksch/MiSTer_tty2tft/tree/main/doc/Setup.md).
 </div>
 </div>
-
-Head over to the [documentation folder](https://github.com/ojaksch/MiSTer_tty2tft/tree/main/doc) or just to [how to set it up](https://github.com/ojaksch/MiSTer_tty2tft/tree/main/doc/Setup.md).
 ---
+
 <!----------------------------------------------------------------------------->
 
 [MiSTer FPGA]: https://github.com/MiSTer-devel
