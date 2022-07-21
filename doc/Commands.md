@@ -25,7 +25,7 @@ If a picture/video can't be found on SD and WiFi isn't available, show a "...not
 But is WiFi available load a **picture** (but not a video) from archive.org and save it on SD.
 An upload with CMDUPLOAD saves the picture/video on SD.
 
-### Color definitions as used by the display driver:
+### Color definitions used by the display driver:
 
 | Color       | Hex    | Dec   | RGB           |
 | ------------|--------|------:|-------------: |
