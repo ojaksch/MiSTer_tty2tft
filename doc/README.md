@@ -23,7 +23,7 @@ As a result, my personal recommendation is a 320x200 for pictures **and** videos
 
 That's all!
 
-
+---
 
 # Software
 
@@ -64,7 +64,7 @@ which downloads and setup the software (init and daemon).
 
 Voila, tty2tft is alive :)
 
-
+---
 
 # Media
 
@@ -89,7 +89,7 @@ name to qbertfixe, then qbertfix, then qbertfi, then qbertf, then qbert and voil
 You can access your device by FTP using a FTP program like FileZilla (recommended!) to organise your SD's content. Username and passwort is "esp32" (without quotes).
 Limit the "parallel connections" to "1" for this connection.
 
-
+---
 
 # MJPEG
 
@@ -130,3 +130,27 @@ Parameters used here (also see [ffmpeg's documentation page](https://ffmpeg.org/
   - scale*scale options* (Here: *scale* to 320x240 with *flags* using the *lanczos* rescaling algorithm, *force_original_aspect_ratio=decrease* (decreasing output video width or height if necessary to keep the original aspect ratio) and *pad*ding to WIDTHxHEIGHT2XxY and *color* black
 - -q *stream_specifier* *quality* (fixed quality scale (VBR))
 - OUTPUT_FILE
+
+---
+
+This paragraph is WiP
+# The INI files
+
+---
+This paragraph is WiP
+# The screensaver
+This is a simple watch that is displayed and wanders around on the screen.
+The time _when_ it is activated and changes it's positions is set by parameters shown below.
+We are using  `cron` for that which might be misleading (for SCREENSAVER_START) the first time as
+this works works a little differently you might think. The timer doesn not start exactly after
+the defined "after X minutes" set, but means "start after X minutes beginning from xx:00 o'clock.
+For example: "after 2 Minutes" is set, it will start every 2 minutes, i.e. 08:02, 08:04, 08:06 and so on.
+Another example: "after 13 Minutes" is set, it will start every 13 minutes, i.e. 08:13, 08:26, 08:38 ...
+```
+SCREENSAVER="yes"       # yes activates the screensaver
+SCREENSAVER_START="2"   # activate after how many minutes
+SCREENSAVER_IVAL="10"   # move position after X seconds
+```
+
+---
+
