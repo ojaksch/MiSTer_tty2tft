@@ -1,3 +1,5 @@
+### Used libraries:
+
 - [JPEGDEC](https://github.com/bitbank2/JPEGDEC/)
 - [GFX_Library_for_Arduino](https://github.com/moononournation/Arduino_GFX)
 - [ESP32Time](https://github.com/fbiego/ESP32Time)
