@@ -10,6 +10,7 @@ Table of Contents
 [Commands](#commands)  
 [Color definitions](#color-definitions-used-by-the-display-driver)  
 [Bugs and things to do](#bugs-and-things-still-to-do)  
+[License](#license)  
 
 ---
 
@@ -237,3 +238,8 @@ https://misterfpga.org/viewtopic.php?p=53857#p53857~~
 > collection and renames the artwork accordingly. The developer of the frontend for my arcade
 > machine (GameEx) designed the utility so that he could make sure his program would be able
 > to find all the artwork when a game was launched.
+
+---
+
+# License
+
