@@ -10,11 +10,12 @@ This project is the big brother of Venice's famous [tty2oled](https://github.com
 based on an ESP32 in Arduino MEGA format and an <br>
 appropriate 8-bit-bus **TFT** display as a shield. <br>
 This setup plays JPG pictures and MJPEG videos <br>
-from SD card, optional downloading via Wifi.
+from SD card, optional downloading via WiFi.
 
 </div>
 </div>
 
+Head over to the [documentation folder](https://github.com/ojaksch/MiSTer_tty2tft/tree/main/doc) or just to [how to set it up](https://github.com/ojaksch/MiSTer_tty2tft/tree/main/doc/Setup.md).
 ---
 <!----------------------------------------------------------------------------->
 
