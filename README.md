@@ -15,7 +15,13 @@ from SD card, optional downloading via WiFi.
 Head over to the [documentation folder](https://github.com/ojaksch/MiSTer_tty2tft/tree/main/doc) or directly to [how to set it up](https://github.com/ojaksch/MiSTer_tty2tft/tree/main/doc/Setup.md).
 </div>
 </div>
+
 ---
+
+### License
+
+![CC BY-NC-SA 4.0](pictures/by-nc-sa.eu.png)  
+[Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 <!----------------------------------------------------------------------------->
 
