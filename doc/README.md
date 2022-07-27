@@ -101,6 +101,9 @@ name to qbertfixe, then qbertfix, then qbertfi, then qbertf, then qbert and voil
 You can access your device by FTP using a FTP program like FileZilla (recommended!) to organise your SD's content. Username and passwort is "esp32" (without quotes).
 Limit the "parallel connections" to "1" for this connection.
 
+After displaying core's image sounds can be played through MiSTer by placing a MP3 into /media/fat/tty2tft/  
+The MP3 must have the same name as the image. No limitation in length or bitrate, but I recommend short ones with a bitrate of 128 or 192.
+
 ---
 
 # MJPEG
@@ -146,7 +149,12 @@ Parameters used here (also see [ffmpeg's documentation page](https://ffmpeg.org/
 ---
 
 # The INI files
-This paragraph is WiP
+
+There are two INI files: **tty2tft-system.ini** and **tty2tft-user.ini** which are read and evaluated by 
+the daemon in that order. tty2tft-system.ini contains the system wide variables and definitions. Do not 
+edit this file as it will be overwritten when doing an update! For your own favorite variables please 
+use tty2tft-user.ini and take over and edit the needed line from tty2tft-system.ini. All useful 
+variables are commented - see "# Userdata" in tty2tft-system.ini
 
 ---
 # The screensaver
