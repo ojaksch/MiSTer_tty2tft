@@ -152,9 +152,9 @@ Parameters used here (also see [ffmpeg's documentation page](https://ffmpeg.org/
 
 There are two INI files: **tty2tft-system.ini** and **tty2tft-user.ini** which are read and evaluated by 
 the daemon in that order. tty2tft-system.ini contains the system wide variables and definitions. Do not 
-edit this file as it will be overwritten when doing an update! For your own favorite variables please 
-use tty2tft-user.ini and take over and edit the needed line from tty2tft-system.ini. All useful 
-variables are commented - see "# Userdata" in tty2tft-system.ini
+edit this file as it will be overwritten when doing an update!  
+For your own favorite variables please use tty2tft-user.ini and take over and edit the needed line 
+from tty2tft-system.ini. All useful variables are commented - see "# Userdata" in tty2tft-system.ini
 
 ---
 # The screensaver
