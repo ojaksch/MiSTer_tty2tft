@@ -158,19 +158,30 @@ from tty2tft-system.ini. All useful variables are commented - see "# Userdata" i
 
 ---
 # The screensaver
-This paragraph is WiP
 
-This is a simple watch that is displayed and wanders around on the screen.
-The time _when_ it is activated and changes it's positions is set by parameters shown below.
+This is a simple screensaver which displays a clock, followed by the MiSTer logo and core's picture (in random order).  
+The clock is extendable: If you have another set of nice digits, resize them to the same size as the existing ones and 
+save them to your SD in /jpg/displaysize/#/000-clockclockset-0.jpg and so on. For exmaple, if you are creating the 
+fourth clock set for your ILI9341, the path would be /jpg/320x240/#/000-clock4-0.jpg for the digit 0. Set SCREENSAVER_TYPE 
+to 4 in your tty2tft-user.ini and you're set. Got it?
+
+The time _when_ it is activated and changes is set by parameters shown below.
 We are using  `cron` for that which might be misleading (for SCREENSAVER_START) the first time as
 this works works a little differently you might think. The timer doesn not start exactly after
 the defined "after X minutes" set, but means "start after X minutes beginning from xx:00 o'clock.
 For example: "after 2 Minutes" is set, it will start every 2 minutes, i.e. 08:02, 08:04, 08:06 and so on.
 Another example: "after 13 Minutes" is set, it will start every 13 minutes, i.e. 08:13, 08:26, 08:38 ...
 ```
-SCREENSAVER="yes"       # yes activates the screensaver
-SCREENSAVER_START="2"   # activate after how many minutes
-SCREENSAVER_IVAL="10"   # move position after X seconds
+SCREENSAVER="yes"               # Set to "yes" to enable screensaver mode on display
+SCREENSAVER_START="2"           # Start screensaver after x minutes (1-59)
+SCREENSAVER_IVAL="10"           # Screensaver Interval (1-59) seconds
+SCREENSAVER_AMPM="no"           # Use the 12h system?
+SCREENSAVER_CLOCK="yes"         # Set to "no" if you aren't using a RTC nor a Internet connection
+SCREENSAVER_TEXT="no"           # Set to "yes" for the text only screensaver
+SCREENSAVER_PICT="yes"          # Show actual core's picture at random time also
+SCREENSAVER_MOVE="yes"          # Set to "no" to show clock and pictures centered only
+SCREENSAVER_TYPE="1"            # 1=folding numbers, 2=digital numbers
+SCREENSAVER_DOTCOL="65535"      # Color of clock's dots. See README at projects site for color values
 ```
 
 ---
