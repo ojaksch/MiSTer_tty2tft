@@ -101,7 +101,7 @@ name to qbertfixe, then qbertfix, then qbertfi, then qbertf, then qbert and voil
 You can access your device by FTP using a FTP program like FileZilla (recommended!) to organise your SD's content. Username and passwort is "esp32" (without quotes).
 Limit the "parallel connections" to "1" for this connection.
 
-After displaying core's image sounds can be played through MiSTer by placing a MP3 into /media/fat/tty2tft/  
+After displaying core's image sounds can be played through MiSTer by placing a MP3 into /media/fat/tty2tft/sound/  
 The MP3 must have the same name as the image. No limitation in length or bitrate, but I recommend short ones with a bitrate of 128 or 192.
 
 ---
