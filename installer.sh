@@ -87,6 +87,7 @@ if [[ -c ${TTYDEV} ]]; then
 
     echo -en "${freset}Trying to identify device... ${freset}"
     echo "CMDHWINF" > ${TTYDEV} ; read -t5 BLA < ${TTYDEV}
+    BLA=$(echo $BLA | sed "s/ttyack;//g")
     if [[ ${?} > 1 ]] && [ -z "${BLA}" ]; then
 	MCUtype="TFTESP32"
 	SWver="0"
