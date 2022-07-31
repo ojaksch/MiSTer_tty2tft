@@ -24,7 +24,7 @@ flashesp() {
 		    echo -e "${fred}\nMAC address: ${MAC}${freset}"
 		    exit 255
 		fi
-		${TMPDIR}/esptool.py --chip esp32 --port ${TTYDEV} --baud ${DBAUD} ${DSTD} 0xe000 ${TMPDIR}/boot_app0.bin 0x1000 ${TMPDIR}/bootloader_dio_80m.bin 0x10000 ${TMPDIR}/esp32de_${BUILDVER}.bin 0x8000 ${TMPDIR}/partitions.bin
+		${TMPDIR}/esptool.py --chip esp32 --port ${TTYDEV} --baud ${DBAUD} ${DSTD} 0xe000 ${TMPDIR}/boot_app0.bin 0x1000 ${TMPDIR}/bootloader_dio_80m.bin 0x10000 ${TMPDIR}/esp32de_${BUILDVER}_${TTY2TFT_DISPLAY}.bin 0x8000 ${TMPDIR}/partitions.bin
 	    fi
 	    ;;
     esac
