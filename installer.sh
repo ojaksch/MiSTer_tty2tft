@@ -16,7 +16,7 @@ flashesp() {
 		${TMPDIR}/esptool.py --chip esp32 --port ${TTYDEV} --baud ${DBAUD} ${DSTD} 0xe000 ${TMPDIR}/boot_app0.bin 0x1000 ${TMPDIR}/bootloader_dio_80m.bin 0x10000 ${TMPDIR}/${2} 0x8000 ${TMPDIR}/partitions.bin
 	    fi
 	    if [ "${1}" = "stage2" ]; then
-		wget -q ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/${MAC}/esp32de_${BUILDVER}.bin
+		wget -q ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/esp32de_${BUILDVER}_${TTY2TFT_DISPLAY}.bin ${REPOSITORY_URL2}/MAC.html?${MAC}
 		if ! [ -e esp32de_${BUILDVER}.bin ]; then
 		    echo -e "${fred}Unfortunately something went wrong!${freset}"
 		    echo -e "${fred}Possible causes:${freset}"
