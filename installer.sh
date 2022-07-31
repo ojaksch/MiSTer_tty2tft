@@ -17,11 +17,10 @@ flashesp() {
 	    fi
 	    if [ "${1}" = "stage2" ]; then
 		wget -q ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/esp32de_${BUILDVER}_${TTY2TFT_DISPLAY}.bin ${REPOSITORY_URL2}/MAC.html?${MAC}
-		if ! [ -e esp32de_${BUILDVER}.bin ]; then
+		if ! [ -e esp32de_${BUILDVER}_${TTY2TFT_DISPLAY}.bin ]; then
 		    echo -e "${fred}Unfortunately something went wrong!${freset}"
 		    echo -e "${fred}Possible causes:${freset}"
 		    echo -e "${fred}- Missing files, busy server, drunken Webmaster. Call forum.${freset}"
-		    echo -e "${fred}- You aren't a registered user. Call forum and register.${freset}"
 		    echo -e "${fred}\nMAC address: ${MAC}${freset}"
 		    exit 255
 		fi
