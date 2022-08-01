@@ -120,6 +120,7 @@ if [ "${1}" = "FORCE" ]; then
     echo -e "${fred}FORCED UPDATE${freset}"
     echo -e "${fyellow}Version of your tty2tft device is ${fblue}${SWver}${fyellow}, forced BUILDVER is ${fgreen}${BUILDVER}${fyellow}.${freset}"
     echo -e "${fyellow}MCUtype is set to ${fblue}${MCUtype}${freset}"
+    ! [ -z ${2} ] && TTY2TFT_DISPLAY="${2}"
     flashesp stage2
     [ "${INITSTOPPED}" = "yes" ] && ${INITSCRIPT} start
 elif [ "${1}" = "TEST-ILI9341" ]; then
