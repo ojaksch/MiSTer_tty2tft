@@ -59,15 +59,10 @@ If you see a message while flashing like
 then the ESP doesn't reset quick enough. Just rerun the line from above. 
 If flash happened successfuly and demo works, just continue - otherwise stop here, check your hardware/cabling and call for help then.
 
-- Type in the following line:  
-`wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- IDENTIFY`  
-This gives you the MAC address of your ESP device. Tell me that MAC address and your used display type (see **Hardware** above). Keep the session/console open.
-
-- I'll create a "repository" especially for you depending on your MAC and will give you an OK then. This means STOP HERE AND WAIT. Take a break. Get a coffee.
-
-- **After my OK** type in  
-`wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- FORCE`  
-which will download and flash the ESP firmware. You should see a [welcome screen](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/000-arcade.jpg) after the reboot of the ESP.
+- Type in  
+`wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- FORCE DISPLAYTYPE`  
+**DISPLAYTYPE** is the type of your display, one of HX8347D, ILI9341, ILI9486, ILI9488  
+This will download and flash the ESP firmware. You should see a [welcome screen](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/000-arcade.jpg) after the reboot of the ESP.  
 
 - Type in  
 `wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/update_tty2tft.sh -O - | bash`  
