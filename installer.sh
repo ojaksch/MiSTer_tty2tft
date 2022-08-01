@@ -12,7 +12,7 @@ flashesp() {
     case "${MCUtype}" in
 	TFTESP32)
 	    if [ "${1}" = "stage1" ]; then
-		wget -q ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin.org ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/${2}
+		wget -q ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/${2}
 		${TMPDIR}/esptool.py --chip esp32 --port ${TTYDEV} --baud ${DBAUD} ${DSTD} 0xe000 ${TMPDIR}/boot_app0.bin 0x1000 ${TMPDIR}/bootloader_dio_80m.bin 0x10000 ${TMPDIR}/${2} 0x8000 ${TMPDIR}/partitions.bin
 	    fi
 	    if [ "${1}" = "stage2" ]; then
@@ -129,6 +129,9 @@ elif [ "${1}" = "TEST-ILI9341" ]; then
 elif [ "${1}" = "TEST-ILI9486" ]; then
     echo -e "${fred}1st Test of your setup${freset}"
     flashesp stage1 gfx-test_ILI9486.bin
+elif [ "${1}" = "TEST-ILI9488" ]; then
+    echo -e "${fred}1st Test of your setup${freset}"
+    flashesp stage1 gfx-test_ILI9488.bin
 else
     if [[ "${SWver}" < "${BUILDVER}" ]]; then
 	echo -e "${fyellow}Version of your tty2tft device is ${fblue}${SWver}${fyellow}, but BUILDVER is ${fgreen}${BUILDVER}${fyellow}.${freset}"
