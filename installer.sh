@@ -119,6 +119,7 @@ fi
 if [ "${1}" = "FORCE" ]; then
     MCUtype="TFTESP32"
     MAC=$(${TMPDIR}/esptool.py --chip esp32 --port ${TTYDEV} read_mac | grep "MAC: " | tail -n1 | awk '{print $2}')
+    if ! [ -z "${3}" ]; then BUILDVER="${3}"; fi
     echo -e "${fred}FORCED UPDATE${freset}"
     echo -e "${fyellow}Version of your tty2tft device is ${fblue}${SWver}${fyellow}, forced BUILDVER is ${fgreen}${BUILDVER}${fyellow}.${freset}"
     echo -e "${fyellow}MCUtype is set to ${fblue}${MCUtype}${freset}"
