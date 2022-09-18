@@ -10,6 +10,7 @@ Table of Contents
 [Commands](#commands)  
 [Color definitions](#color-definitions-used-by-the-display-driver)  
 [Bugs and things to do](#bugs-and-things-still-to-do)  
+[Compiling](#compiling)
 [License](#license)  
 
 ---
@@ -250,6 +251,13 @@ https://misterfpga.org/viewtopic.php?p=53857#p53857~~
 - ~~Touch support~~ [Not possible yet](https://github.com/ImpulseAdventure/GUIslice/issues/130)
 
 - [Unreliable WiFi connection](https://github.com/espressif/arduino-esp32/issues/1675)
+
+---
+
+# Compiling
+
+I'm a fan of a command line and using [makeEspArduino](https://github.com/plerup/makeEspArduino) for compiling this Sketch. If you 
+are using the Arduino IDE, please select the "ESP32 Dev MOdule" and "Minimal SPIFFS" for the Partition Scheme. That's all.
 
 ---
 
