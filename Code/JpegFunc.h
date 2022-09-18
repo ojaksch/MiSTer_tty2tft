@@ -1,11 +1,11 @@
 /*******************************************************************************
- * JPEGDEC Wrapper Class
+ * JPEGDEC related function
  *
  * Dependent libraries:
  * JPEGDEC: https://github.com/bitbank2/JPEGDEC.git
  ******************************************************************************/
-#ifndef _JPEGCLASS_H_
-#define _JPEGCLASS_H_
+#ifndef _JPEGFUNC_H_
+#define _JPEGFUNC_H_
 
 #include <JPEGDEC.h>
 
@@ -18,7 +18,7 @@ static void *jpegOpenFile(const char *szFilename, int32_t *pFileSize) {
     // Serial.println("jpegOpenFile");
 #if defined(ARDUINO_ARCH_SAMD) && defined(SEEED_GROVE_UI_WIRELESS)
     _f = SD.open(szFilename, "r");
-#elif defined(ARDUINO_RASPBERRY_PI_PICO)
+#elif defined(ARDUINO_RASPBERRY_PI_PICO) || defined(ARDUINO_RASPBERRY_PI_PICO_W)
     _f = LittleFS.open(szFilename, "r");
     // _f = SDFS.open(szFilename, "r");
 #elif defined(ESP32)
@@ -92,4 +92,4 @@ static void jpegDraw(
     _jpeg.close();
 }
 
-#endif // _JPEGCLASS_H_
+#endif // _JPEGFUNC_H_
