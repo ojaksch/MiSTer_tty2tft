@@ -10,7 +10,7 @@ Table of Contents
 [Commands](#commands)  
 [Color definitions](#color-definitions-used-by-the-display-driver)  
 [Bugs and things to do](#bugs-and-things-still-to-do)  
-[Compiling](#compiling)
+[Compiling](#compiling)  
 [License](#license)  
 
 ---
