@@ -23,7 +23,7 @@ Other 8-bit bus displays should also work (according to librarys documentation).
 - 2022-06: ILI9486 (480x320) succesfully tested by Salamantecas
 - 2022-06: HX8347D (320x200) succesfully tested, many many thanks to Salamantecas!  
 
-The ESP needs a [small modifictaion consisting of three cables](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/d1r32-mod.jpg). 
+The ESP with the parallel TFT shields (not necessary for the SPI shields) needs a [small modifictaion consisting of three cables](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/d1r32-mod.jpg). 
 ([Source](https://github.com/Bodmer/TFT_eSPI#8-bit-parallel-support))  
 
 **Notices:**
