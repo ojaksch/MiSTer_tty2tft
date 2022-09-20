@@ -10,6 +10,7 @@
 // edit JPEGDEC.h and change the values of
 // JPEG_FILE_BUF_SIZE and MAX_BUFFERED_PIXELS to 4096
 //
+// Change SD_CS if you are using an Adafruit 2.8 SPI based TFT shield
 // Don't forget to enable your display type - see code block below ("Arduino_GFX")
 // Also enable the appropriate font just below display type
 
@@ -22,7 +23,7 @@ String BuildVersion = "220914";
 
 // SD card access
 #define SD_CS 5														// IMPORTANT
-//#define SD_CS 17        //used for Adafruit 2.8 SPI based TFT shield													
+//#define SD_CS 17													// used for Adafruit 2.8 SPI based TFT shield
 #include <SD.h>
 #include <FS.h>
 File filehandle;
