@@ -22,6 +22,7 @@ String BuildVersion = "220914";
 
 // SD card access
 #define SD_CS 5														// IMPORTANT
+//#define SD_CS 17        //used for Adafruit 2.8 SPI based TFT shield													
 #include <SD.h>
 #include <FS.h>
 File filehandle;
