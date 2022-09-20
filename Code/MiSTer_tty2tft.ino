@@ -10,11 +10,16 @@
 // edit JPEGDEC.h and change the values of
 // JPEG_FILE_BUF_SIZE and MAX_BUFFERED_PIXELS to 4096
 //
-// Change SD_CS if you are using an Adafruit 2.8 SPI based TFT shield
+//
 // Don't forget to enable your display type - see code block below ("Arduino_GFX")
 // Also enable the appropriate font just below display type
-
-
+//
+// If upi want to use the Adafruit 2.8 SPI based TFT shield do the followings:
+// Change SD_CS to 17 
+// Use Arduino_ESP32SPI instead of Arduino_ESP32PAR8
+// Use the right Arduino_GFX for the SPI module from ("Arduino_GFX") code block (choose the second Arduino_ILI9341)
+//
+//
 // crc32: https://github.com/bakercp/CRC32
 
 
@@ -23,7 +28,7 @@ String BuildVersion = "220914";
 
 // SD card access
 #define SD_CS 5														// IMPORTANT
-//#define SD_CS 17													// used for Adafruit 2.8 SPI based TFT shield
+// #define SD_CS 17				// used instead of line above for Adafruit 2.8 SPI based TFT shield
 #include <SD.h>
 #include <FS.h>
 File filehandle;
@@ -47,10 +52,13 @@ File32 filehandle;
 #include <U8g2lib.h>
 #include <Arduino_GFX_Library.h>											// Hardware-specific library
 Arduino_DataBus *bus = new Arduino_ESP32PAR8(15 /* DC */, 33 /* CS */, 4 /* WR */, 2 /* RD */, 12 /* D0 */, 13 /* D1 */, 26 /* D2 */, 25 /* D3 */, 17 /* D4 */, 16 /* D5 */, 27 /* D6 */, 14 /* D7 */);
+// Arduino_DataBus *bus = new Arduino_ESP32SPI(13 /* DC */, 5 /* CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */, VSPI /* spi_num */); // used instead of line above for Adafruit 2.8 SPI based TFT shield
+
 //
 // Enable the corresponding display type here. ONLY ONE possible.
 //
 // Arduino_GFX *gfx = new Arduino_ILI9341(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
+// Arduino_GFX *gfx = new Arduino_ILI9341(bus, 12 /* RST */, 1 /* rotation */, false /* IPS */); // used instead of line above for Adafruit 2.8 SPI based TFT shield
 // Arduino_GFX *gfx = new Arduino_ILI9481_18bit(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
 // Arduino_GFX *gfx = new Arduino_ILI9486(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
 // Arduino_GFX *gfx = new Arduino_ILI9488(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
