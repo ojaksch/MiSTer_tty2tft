@@ -66,7 +66,7 @@ If flash happened successfuly and demo works, just continue - otherwise stop her
 
 - Type in  
 `wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- FORCE DISPLAYTYPE`  
-**DISPLAYTYPE** is the type of your display, one of HX8347D, ILI9341, ILI9486, ILI9488 so, for example, your line should read  
+**DISPLAYTYPE** is the type of your display, one of HX8347D, ILI9341, ILI9486, ILI9488 or ILI9341SPI so, for example, your line should read  
 `wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- FORCE ILI9341`  
 when flashing for a display ILI9341. This will download and flash the ESP firmware. You should see a [welcome screen](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/000-arcade.jpg) after the reboot of the ESP.  
 
