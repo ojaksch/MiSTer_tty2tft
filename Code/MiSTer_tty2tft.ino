@@ -24,7 +24,7 @@
 
 
 //#define XDEBUG													// Uncomment to receive debug messages by serial output
-String BuildVersion = "220914";
+String BuildVersion = "220926";
 
 // SD card access
 #define SD_CS 5														// IMPORTANT

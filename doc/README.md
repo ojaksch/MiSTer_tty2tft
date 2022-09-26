@@ -56,6 +56,7 @@ Only needed if you want to use WiFi, otherwise leave it as it is. When editing, 
 for ILI9341: `wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- TEST-ILI9341`  
 for ILI9486: `wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- TEST-ILI9486`  
 for ILI9488: `wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- TEST-ILI9488`  
+for ILI9341SPI: `wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- TEST-ILI9341SPI`  
 This will flash a simple and looping graphics demo.   
 If you see a message while flashing like
 > WARNING: Failed to communicate with the flash chip...
@@ -260,7 +261,7 @@ https://misterfpga.org/viewtopic.php?p=53857#p53857~~
 # Compiling
 
 I'm a fan of a command line and using [makeEspArduino](https://github.com/plerup/makeEspArduino) for compiling this Sketch. If you 
-are using the Arduino IDE, please select the "ESP32 Dev MOdule" and "Minimal SPIFFS" for the Partition Scheme. That's all.
+are using the Arduino IDE, please select the "ESP32 Dev Module" and "Minimal SPIFFS" for the Partition Scheme. That's all.
 
 ---
 

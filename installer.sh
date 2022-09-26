@@ -134,6 +134,9 @@ if [ "${1}" = "FORCE" ]; then
   elif [ "${1}" = "TEST-ILI9341" ]; then
     echo -e "${fred}1st Test of your setup${freset}"
     flashesp stage1 gfx-test_ILI9341.bin
+  elif [ "${1}" = "TEST-ILI9341SPI" ]; then
+    echo -e "${fred}1st Test of your setup${freset}"
+    flashesp stage1 gfx-test_ILI9341SPI.bin
   elif [ "${1}" = "TEST-ILI9486" ]; then
     echo -e "${fred}1st Test of your setup${freset}"
     flashesp stage1 gfx-test_ILI9486.bin
