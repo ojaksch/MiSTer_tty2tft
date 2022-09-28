@@ -61,12 +61,19 @@ static int32_t jpegSeekFile(JPEGFILE *pFile, int32_t iPosition)
 static void jpegDraw(
     const char *filename, JPEG_DRAW_CALLBACK *jpegDrawCallback, bool useBigEndian,
     int x, int y, int widthLimit, int heightLimit, int _scale) {
+
+    _jpeg.open(filename, jpegOpenFile, jpegCloseFile, jpegReadFile, jpegSeekFile, jpegDrawCallback);
+
+
+
+  if (x == -1 && y == -1) {
+    x = (widthLimit / 2) - (_jpeg.getWidth() / 2);
+    y = (heightLimit / 2) - (_jpeg.getHeight() / 2);
+  }
     _x = x;
     _y = y;
     _x_bound = _x + widthLimit - 1;
     _y_bound = _y + heightLimit - 1;
-
-    _jpeg.open(filename, jpegOpenFile, jpegCloseFile, jpegReadFile, jpegSeekFile, jpegDrawCallback);
 
     // scale to fit height
     int iMaxMCUs;
