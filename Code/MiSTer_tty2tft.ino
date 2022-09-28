@@ -11,14 +11,7 @@
 // JPEG_FILE_BUF_SIZE and MAX_BUFFERED_PIXELS to 4096
 //
 //
-// Don't forget to enable your display type - see code block below ("Arduino_GFX")
-// Also enable the appropriate font just below display type
-//
-// If upi want to use the Adafruit 2.8 SPI based TFT shield do the followings:
-// Change SD_CS to 17 
-// Use Arduino_ESP32SPI instead of Arduino_ESP32PAR8
-// Use the right Arduino_GFX for the SPI module from ("Arduino_GFX") code block (choose the second Arduino_ILI9341)
-//
+// Don't forget to set your display type - see line IMPORTANT: CHANGE THIS TO YOUR CORRESPONDING DEVICE below
 //
 // crc32: https://github.com/bakercp/CRC32
 
@@ -576,6 +569,7 @@ void fetchfile(String fetchURL, String fetchfilename) {
       writetext(picfnam, 1, 20, 80, DEFAULT_FONT, 0, YELLOW, false, "");
       writetext("(http status: " + String(loaded_ok) + ")", 1, 20, 120, DEFAULT_FONT, 0, random(0xFFFF), false, "");
       playpicture("000-smiley-oooh", 190, 120, 0);
+      newCommand = prevCommand;
     } // end ifs
   }
 }
@@ -850,6 +844,7 @@ int getFile(String url, String corefilename) {
 
     HTTPClient http;
     http.begin(url);													// Configure server and url
+    http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);								// Follow automatically after a "302 redirect"
 
     #ifdef XDEBUG
       Serial.println("[HTTP] GET...\n");
