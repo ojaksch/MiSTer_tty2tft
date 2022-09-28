@@ -24,11 +24,18 @@
 
 
 //#define XDEBUG													// Uncomment to receive debug messages by serial output
-String BuildVersion = "220926";
+String BuildVersion = "220928";
+
+// IMPORTANT: CHANGE THIS TO YOUR CORRESPONDING DEVICE
+#define ILI9341														// Possible values are: HX8347D,ILI9341,ILI9486,ILI9488,ILI9481_18bit,ILI9341SPI
 
 // SD card access
-#define SD_CS 5														// IMPORTANT
-// #define SD_CS 17				// used instead of line above for Adafruit 2.8 SPI based TFT shield
+#ifdef ILI9341SPI
+  #define SD_CS 17													// used for Adafruit 2.8 SPI based TFT shield
+#else
+  #define SD_CS 5													// used for all other shields
+#endif
+
 #include <SD.h>
 #include <FS.h>
 File filehandle;
@@ -51,22 +58,42 @@ File32 filehandle;
 #include <Wire.h>
 #include <U8g2lib.h>
 #include <Arduino_GFX_Library.h>											// Hardware-specific library
-Arduino_DataBus *bus = new Arduino_ESP32PAR8(15 /* DC */, 33 /* CS */, 4 /* WR */, 2 /* RD */, 12 /* D0 */, 13 /* D1 */, 26 /* D2 */, 25 /* D3 */, 17 /* D4 */, 16 /* D5 */, 27 /* D6 */, 14 /* D7 */);
-// Arduino_DataBus *bus = new Arduino_ESP32SPI(13 /* DC */, 5 /* CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */, VSPI /* spi_num */); // used instead of line above for Adafruit 2.8 SPI based TFT shield
+#ifdef ILI9341SPI
+  Arduino_DataBus *bus = new Arduino_ESP32SPI(13 /* DC */, 5 /* CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */, VSPI /* spi_num */);		// used for Adafruit 2.8 SPI based TFT shield
+#else
+  Arduino_DataBus *bus = new Arduino_ESP32PAR8(15 /* DC */, 33 /* CS */, 4 /* WR */, 2 /* RD */, 12 /* D0 */, 13 /* D1 */, 26 /* D2 */, 25 /* D3 */, 17 /* D4 */, 16 /* D5 */, 27 /* D6 */, 14 /* D7 */);
+#endif
 
-//
-// Enable the corresponding display type here. ONLY ONE possible.
-//
-// Arduino_GFX *gfx = new Arduino_ILI9341(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
-// Arduino_GFX *gfx = new Arduino_ILI9341(bus, 12 /* RST */, 1 /* rotation */, false /* IPS */); // used instead of line above for Adafruit 2.8 SPI based TFT shield
-// Arduino_GFX *gfx = new Arduino_ILI9481_18bit(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
-// Arduino_GFX *gfx = new Arduino_ILI9486(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
-// Arduino_GFX *gfx = new Arduino_ILI9488(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
-// Arduino_GFX *gfx = new Arduino_HX8347C(bus, 32 /* RST */, 1 /* rotation */, true /* IPS */);
-// Arduino_GFX *gfx = new Arduino_HX8347D(bus, 32 /* RST */, 1 /* rotation */, true /* IPS */);
-
-// const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
-// const uint8_t *DEFAULT_FONT = u8g2_font_9x15_mf;									// Default font for 480x320 (ILI9486/ILI9488)
+#ifdef ILI9341
+  Arduino_GFX *gfx = new Arduino_ILI9341(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
+  const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
+#endif
+#ifdef ILI9481_18bit
+  Arduino_GFX *gfx = new Arduino_ILI9481_18bit(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
+  const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
+#endif
+#ifdef ILI9341SPI
+  Arduino_GFX *gfx = new Arduino_ILI9341(bus, 12 /* RST */, 1 /* rotation */, false /* IPS */);				// used for Adafruit 2.8 SPI based TFT shield
+  const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
+  #include <Adafruit_FT6206.h>												// TOUCH for Adafruit 2.8 SPI based TFT shield
+  Adafruit_FT6206 ts = Adafruit_FT6206();
+#endif
+#ifdef ILI9486
+  Arduino_GFX *gfx = new Arduino_ILI9486(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
+  const uint8_t *DEFAULT_FONT = u8g2_font_9x15_mf;									// Default font for 480x320 (ILI9486/ILI9488)
+#endif
+#ifdef ILI9488
+  Arduino_GFX *gfx = new Arduino_ILI9488(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
+  const uint8_t *DEFAULT_FONT = u8g2_font_9x15_mf;									// Default font for 480x320 (ILI9486/ILI9488)
+#endif
+#ifdef HX8347C
+  Arduino_GFX *gfx = new Arduino_HX8347C(bus, 32 /* RST */, 1 /* rotation */, true /* IPS */);
+  const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
+#endif
+#ifdef HX8347D
+  Arduino_GFX *gfx = new Arduino_HX8347D(bus, 32 /* RST */, 1 /* rotation */, true /* IPS */);
+  const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
+#endif
 
 // RTC functions
 #include <ESP32Time.h>
@@ -223,8 +250,16 @@ void setup(void) {
 
   showarcade();														// Initial screen
   writetext("- tty2tft -", 0, 127, 85, DEFAULT_FONT, 0, random(0xFFFF), false, "");
-  writetext(BuildVersion, 0, 275, 233, DEFAULT_FONT, 3, YELLOW, false, "");
   writetext("Welcome!", 0, 138, 98, DEFAULT_FONT, 0, random(0xFFFF), false, "");
+  writetext(BuildVersion, 0, 275, 233, DEFAULT_FONT, 3, YELLOW, false, "");
+
+  #ifdef ILI9341SPI
+    if (!ts.begin(40)) {												// TOUCH
+      writetext("NT", 0, 10, 233, DEFAULT_FONT, 3, RED, false, "");
+    } else {
+      writetext("T", 0, 10, 233, DEFAULT_FONT, 3, RED, false, "");
+    }   
+  #endif
 
   if (USE_WIFI) {
     wifi_country_t WIFIcountry;
@@ -282,6 +317,9 @@ void loop(void) {
   }
   Cron.delay();
   if (USE_WIFI) ftpSrv.handleFTP();
+  #ifdef ILI9341SPI
+    if (ts.touched()) footbanner("Touch me, Baby!");									// TOUCH
+  #endif
 
   if (newCommand != prevCommand) {											// Proceed only if Core Name changed
 
@@ -506,7 +544,7 @@ void showpic(String corefilename) {
   setfnamvars(actCorename, "jpg");
   if (SD.exists(corefilename)) {
     gfx->fillScreen(BLACK);
-    playpicture(actCorename, 0, 0, 0);
+    playpicture(actCorename, -1, -1, 0);
   } else {
     if (!USE_WIFI) playpicture("000-notavailable", 0, 0, 0);
     if (USE_WIFI) fetchfile(URL + folderjpg + dirletter + picfnam, folderjpg + dirletter + picfnam);
