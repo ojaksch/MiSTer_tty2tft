@@ -64,8 +64,6 @@ static void jpegDraw(
 
     _jpeg.open(filename, jpegOpenFile, jpegCloseFile, jpegReadFile, jpegSeekFile, jpegDrawCallback);
 
-
-
   if (x == -1 && y == -1) {
     x = (widthLimit / 2) - (_jpeg.getWidth() / 2);
     y = (heightLimit / 2) - (_jpeg.getHeight() / 2);

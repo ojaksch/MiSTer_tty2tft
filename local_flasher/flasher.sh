@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ -z ${1} ]; then
+  echo "Missing parameter. You have to enter the binary's filename to download."
+  echo "Exiting."
+  exit 255
+fi
+
 TTYDEV="/dev/ttyUSB0"
 DBAUD="921600"
 DSTD="--before default_reset --after hard_reset write_flash --compress --flash_mode dio --flash_freq 80m --flash_size detect"
