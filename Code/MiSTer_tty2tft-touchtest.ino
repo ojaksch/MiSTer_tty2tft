@@ -11,24 +11,24 @@
 // JPEG_FILE_BUF_SIZE and MAX_BUFFERED_PIXELS to 4096
 //
 //
-// Don't forget to enable your display type - see code block below ("Arduino_GFX")
-// Also enable the appropriate font just below display type
-//
-// If upi want to use the Adafruit 2.8 SPI based TFT shield do the followings:
-// Change SD_CS to 17 
-// Use Arduino_ESP32SPI instead of Arduino_ESP32PAR8
-// Use the right Arduino_GFX for the SPI module from ("Arduino_GFX") code block (choose the second Arduino_ILI9341)
-//
+// Don't forget to set your display type - see line IMPORTANT: CHANGE THIS TO YOUR CORRESPONDING DEVICE below
 //
 // crc32: https://github.com/bakercp/CRC32
 
 
 //#define XDEBUG													// Uncomment to receive debug messages by serial output
-String BuildVersion = "220927";
+String BuildVersion = "220928";
+
+// IMPORTANT: CHANGE THIS TO YOUR CORRESPONDING DEVICE
+#define ILI9341														// Possible values are: HX8347D,ILI9341,ILI9486,ILI9488,ILI9481_18bit,ILI9341SPI
 
 // SD card access
-#define SD_CS 5														// IMPORTANT
-// #define SD_CS 17				// used instead of line above for Adafruit 2.8 SPI based TFT shield
+#ifdef ILI9341SPI
+  #define SD_CS 17													// used for Adafruit 2.8 SPI based TFT shield
+#else
+  #define SD_CS 5													// used for all other shields
+#endif
+
 #include <SD.h>
 #include <FS.h>
 File filehandle;
@@ -47,30 +47,46 @@ File32 filehandle;
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-// Touch - FT6206 uses hardware I2C (SCL/SDA)
-#include <Adafruit_FT6206.h>												// TOUCH for Adafruit 2.8 SPI based TFT shield
-Adafruit_FT6206 ts = Adafruit_FT6206();
-
 // Setup display and JPG libs
 #include <Wire.h>
 #include <U8g2lib.h>
 #include <Arduino_GFX_Library.h>											// Hardware-specific library
-Arduino_DataBus *bus = new Arduino_ESP32PAR8(15 /* DC */, 33 /* CS */, 4 /* WR */, 2 /* RD */, 12 /* D0 */, 13 /* D1 */, 26 /* D2 */, 25 /* D3 */, 17 /* D4 */, 16 /* D5 */, 27 /* D6 */, 14 /* D7 */);
-// Arduino_DataBus *bus = new Arduino_ESP32SPI(13 /* DC */, 5 /* CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */, VSPI /* spi_num */); // used instead of line above for Adafruit 2.8 SPI based TFT shield
+#ifdef ILI9341SPI
+  Arduino_DataBus *bus = new Arduino_ESP32SPI(13 /* DC */, 5 /* CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */, VSPI /* spi_num */);		// used for Adafruit 2.8 SPI based TFT shield
+#else
+  Arduino_DataBus *bus = new Arduino_ESP32PAR8(15 /* DC */, 33 /* CS */, 4 /* WR */, 2 /* RD */, 12 /* D0 */, 13 /* D1 */, 26 /* D2 */, 25 /* D3 */, 17 /* D4 */, 16 /* D5 */, 27 /* D6 */, 14 /* D7 */);
+#endif
 
-//
-// Enable the corresponding display type here. ONLY ONE possible.
-//
-// Arduino_GFX *gfx = new Arduino_ILI9341(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
-// Arduino_GFX *gfx = new Arduino_ILI9341(bus, 12 /* RST */, 1 /* rotation */, false /* IPS */); // used instead of line above for Adafruit 2.8 SPI based TFT shield
-// Arduino_GFX *gfx = new Arduino_ILI9481_18bit(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
-// Arduino_GFX *gfx = new Arduino_ILI9486(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
-// Arduino_GFX *gfx = new Arduino_ILI9488(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
-// Arduino_GFX *gfx = new Arduino_HX8347C(bus, 32 /* RST */, 1 /* rotation */, true /* IPS */);
-// Arduino_GFX *gfx = new Arduino_HX8347D(bus, 32 /* RST */, 1 /* rotation */, true /* IPS */);
-
-// const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
-// const uint8_t *DEFAULT_FONT = u8g2_font_9x15_mf;									// Default font for 480x320 (ILI9486/ILI9488)
+#ifdef ILI9341
+  Arduino_GFX *gfx = new Arduino_ILI9341(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
+  const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
+#endif
+#ifdef ILI9481_18bit
+  Arduino_GFX *gfx = new Arduino_ILI9481_18bit(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
+  const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
+#endif
+#ifdef ILI9341SPI
+  Arduino_GFX *gfx = new Arduino_ILI9341(bus, 12 /* RST */, 1 /* rotation */, false /* IPS */);				// used for Adafruit 2.8 SPI based TFT shield
+  const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
+  #include <Adafruit_FT6206.h>												// TOUCH for Adafruit 2.8 SPI based TFT shield
+  Adafruit_FT6206 ts = Adafruit_FT6206();
+#endif
+#ifdef ILI9486
+  Arduino_GFX *gfx = new Arduino_ILI9486(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
+  const uint8_t *DEFAULT_FONT = u8g2_font_9x15_mf;									// Default font for 480x320 (ILI9486/ILI9488)
+#endif
+#ifdef ILI9488
+  Arduino_GFX *gfx = new Arduino_ILI9488(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
+  const uint8_t *DEFAULT_FONT = u8g2_font_9x15_mf;									// Default font for 480x320 (ILI9486/ILI9488)
+#endif
+#ifdef HX8347C
+  Arduino_GFX *gfx = new Arduino_HX8347C(bus, 32 /* RST */, 1 /* rotation */, true /* IPS */);
+  const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
+#endif
+#ifdef HX8347D
+  Arduino_GFX *gfx = new Arduino_HX8347D(bus, 32 /* RST */, 1 /* rotation */, true /* IPS */);
+  const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
+#endif
 
 // RTC functions
 #include <ESP32Time.h>
@@ -229,11 +245,14 @@ void setup(void) {
   writetext("- tty2tft -", 0, 127, 85, DEFAULT_FONT, 0, random(0xFFFF), false, "");
   writetext("Welcome!", 0, 138, 98, DEFAULT_FONT, 0, random(0xFFFF), false, "");
   writetext(BuildVersion, 0, 275, 233, DEFAULT_FONT, 3, YELLOW, false, "");
-  if (!ts.begin(40)) {													// TOUCH
-    writetext("NT", 0, 10, 233, DEFAULT_FONT, 3, RED, false, "");
-  } else {
-    writetext("T", 0, 10, 233, DEFAULT_FONT, 3, RED, false, "");
-  }
+
+  #ifdef ILI9341SPI
+    if (!ts.begin(40)) {												// TOUCH
+      writetext("NT", 0, 10, 233, DEFAULT_FONT, 3, RED, false, "");
+    } else {
+      writetext("T", 0, 10, 233, DEFAULT_FONT, 3, RED, false, "");
+    }   
+  #endif
 
   if (USE_WIFI) {
     wifi_country_t WIFIcountry;
@@ -291,7 +310,14 @@ void loop(void) {
   }
   Cron.delay();
   if (USE_WIFI) ftpSrv.handleFTP();
-  if (ts.touched()) footbanner("Touch me, Baby!");									// TOUCH
+  #ifdef ILI9341SPI
+    if (ts.touched()) {
+      Serial.print("touchpressed;sysinfo;");
+      while (ts.touched()) {												// Wait until untouched
+	delay(100);
+      }
+    }
+  #endif
 
   if (newCommand != prevCommand) {											// Proceed only if Core Name changed
 
@@ -327,6 +353,39 @@ void loop(void) {
     else if (newCommand.startsWith("CMDVIDEOPLAY,")) {									// Play a video or not
       videoplay = newCommand.substring(13);
     }
+/*    else if (newCommand.startsWith("CMDSYSINFO,")) {									// SYSINFO
+      int d1 = newCommand.indexOf(',');
+      int d2 = newCommand.indexOf(',', d1+1 );
+      int d3 = newCommand.indexOf(',', d2+1 );
+      int d4 = newCommand.indexOf(',', d3+1 );
+      int d5 = newCommand.indexOf(',', d4+1 );
+      int d6 = newCommand.indexOf(',', d5+1 );
+      int d7 = newCommand.indexOf(',', d6+1 );
+      String sysinfotop = newCommand.substring(d1 + 1, d2);
+      String sysinfofree = newCommand.substring(d2 + 1, d3);
+      String sysinfodf = newCommand.substring(d3 + 1, d4);
+      String sysinfotemp = newCommand.substring(d4 + 1, d5);
+      String sysinfoeth0 = newCommand.substring(d5 + 1, d6);
+      String sysinfowlan0 = newCommand.substring(d6 + 1, d7);
+      String sysinfocore = newCommand.substring(d7 + 1);
+
+      if (ScreenSaverAMPM == "yes") {
+	hour1 = rtc.getTime("%I").substring(0,1);
+	hour2 = rtc.getTime("%I").substring(1,2);
+      } else {
+	hour1 = rtc.getTime("%H").substring(0,1);
+	hour2 = rtc.getTime("%H").substring(1,2);
+      }
+      minute1 = rtc.getTime("%M").substring(0,1);
+      minute2 = rtc.getTime("%M").substring(1,2);
+      second1 = rtc.getTime("%S").substring(0,1);
+      second2 = rtc.getTime("%S").substring(1,2);
+
+//writetext(TextOut, fixedpos, x, y, u8g2_font_5x7_mf, rotation, fontcolor, backgcolor, clear = "");
+
+
+
+    }*/
     else if (newCommand.startsWith("CMDROT,")) {									// Rotate the screen
       if (ScreenSaverSet == true) Cron.disable(cronid2);
       int rot = (newCommand.substring(7)).toInt();
@@ -516,7 +575,7 @@ void showpic(String corefilename) {
   setfnamvars(actCorename, "jpg");
   if (SD.exists(corefilename)) {
     gfx->fillScreen(BLACK);
-    playpicture(actCorename, 0, 0, 0);
+    playpicture(actCorename, -1, -1, 0);
   } else {
     if (!USE_WIFI) playpicture("000-notavailable", 0, 0, 0);
     if (USE_WIFI) fetchfile(URL + folderjpg + dirletter + picfnam, folderjpg + dirletter + picfnam);
@@ -548,6 +607,7 @@ void fetchfile(String fetchURL, String fetchfilename) {
       writetext(picfnam, 1, 20, 80, DEFAULT_FONT, 0, YELLOW, false, "");
       writetext("(http status: " + String(loaded_ok) + ")", 1, 20, 120, DEFAULT_FONT, 0, random(0xFFFF), false, "");
       playpicture("000-smiley-oooh", 190, 120, 0);
+      newCommand = prevCommand;
     } // end ifs
   }
 }
@@ -822,6 +882,7 @@ int getFile(String url, String corefilename) {
 
     HTTPClient http;
     http.begin(url);													// Configure server and url
+    http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);								// Follow automatically after a "302 redirect"
 
     #ifdef XDEBUG
       Serial.println("[HTTP] GET...\n");
