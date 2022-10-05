@@ -108,6 +108,8 @@ if [ -e ${TTY2TFT_PATH}/80-ttyusb.rules ] && ! [ -e /etc/udev/rules.d/80-ttyusb.
   cp -a ${TTY2TFT_PATH}/80-ttyusb.rules /etc/udev/rules.d/80-ttyusb.rules
 fi
 
+# MBC - https://github.com/pocomane/MiSTer_Batch_Control
+if [ ! -e /media/fat/Scripts/mbc ] && wget ${NODEBUG} ${REPOSITORY_URL}/mbc -O /media/fat/Scripts/mbc && chmod +x /media/fat/Scripts/mbc
 
 # Download the installer to check esp firmware
 cd /tmp
