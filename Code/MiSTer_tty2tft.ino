@@ -1046,23 +1046,23 @@ void touchfunctions() {
       if (x > 220 && x < 300 && y > 160 && y < 210) Serial.print("touchpressed;button8;");				// Button 8
       if (x > 0 && x < 70 && y > 200 && y < 240) {									// Trash Can
 	footbanner("Don't wake up Oscar!");
-	delay(2000);
+	delay(1000);
       }
     }
 
     if (DispWidth == 480) {
-      // To Do 120x70
       if (x >  20 && x < 140 && y > 20  && y <  90) Serial.print("touchpressed;button1;");				// Button 1
       if (x > 180 && x < 300 && y > 20  && y <  90) Serial.print("touchpressed;button2;");				// Button 3
       if (x > 340 && x < 460 && y > 20  && y <  90) Serial.print("touchpressed;button3;");				// Button 3
-
       if (x >  20 && x < 140 && y > 120 && y < 190) Serial.print("touchpressed;button4;");				// Button 4
       if (x > 180 && x < 300 && y > 120 && y < 190) Serial.print("touchpressed;button5;");				// Button 5
       if (x > 340 && x < 460 && y > 120 && y < 190) Serial.print("touchpressed;button6;");				// Button 6
-
       if (x > 180 && x < 300 && y > 220 && y < 290) Serial.print("touchpressed;button7;");				// Button 7
       if (x > 340 && x < 460 && y > 220 && y < 290) Serial.print("touchpressed;button8;");				// Button 8
-
+      if (x > 0 && x < 90 && y > 260 && y < 320) {									// Trash Can
+	footbanner("Don't wake up Oscar!");
+	delay(1000);
+      }
     }
 
     TOUCHED = false;
