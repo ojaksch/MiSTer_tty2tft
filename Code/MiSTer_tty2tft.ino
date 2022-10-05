@@ -17,7 +17,7 @@
 
 
 //#define XDEBUG													// Uncomment to receive debug messages by serial output
-String BuildVersion = "220928";
+String BuildVersion = "221005";
 
 // IMPORTANT: CHANGE THIS TO YOUR CORRESPONDING DEVICE
 #define ILI9341														// Possible values are: HX8347D,ILI9341,ILI9486,ILI9488,ILI9481_18bit,ILI9341SPI
@@ -166,6 +166,7 @@ String WSSID = "SSID";
 String WPASS = "PW";
 String WIFItimeout = "20";
 char *WIFIcountry = "US";
+bool TOUCHED = false;
 
 String URL = "https://127.0.0.1";
 bool USE_WIFI = false;
@@ -309,9 +310,14 @@ void loop(void) {
     #endif
   }
   Cron.delay();
+
   if (USE_WIFI) ftpSrv.handleFTP();
+  // reset, user, osd
+
   #ifdef ILI9341SPI
-    if (ts.touched()) footbanner("Touch me, Baby!");									// TOUCH
+    if (ts.touched()) touchfunctions();
+//    if (ts.touched() && TOUCHED == false) touchfunction1();
+//    if (ts.touched() && TOUCHED == true) touchfunction1();
   #endif
 
   if (newCommand != prevCommand) {											// Proceed only if Core Name changed
@@ -348,6 +354,39 @@ void loop(void) {
     else if (newCommand.startsWith("CMDVIDEOPLAY,")) {									// Play a video or not
       videoplay = newCommand.substring(13);
     }
+/*    else if (newCommand.startsWith("CMDSYSINFO,")) {									// SYSINFO
+      int d1 = newCommand.indexOf(',');
+      int d2 = newCommand.indexOf(',', d1+1 );
+      int d3 = newCommand.indexOf(',', d2+1 );
+      int d4 = newCommand.indexOf(',', d3+1 );
+      int d5 = newCommand.indexOf(',', d4+1 );
+      int d6 = newCommand.indexOf(',', d5+1 );
+      int d7 = newCommand.indexOf(',', d6+1 );
+      String sysinfotop = newCommand.substring(d1 + 1, d2);
+      String sysinfofree = newCommand.substring(d2 + 1, d3);
+      String sysinfodf = newCommand.substring(d3 + 1, d4);
+      String sysinfotemp = newCommand.substring(d4 + 1, d5);
+      String sysinfoeth0 = newCommand.substring(d5 + 1, d6);
+      String sysinfowlan0 = newCommand.substring(d6 + 1, d7);
+      String sysinfocore = newCommand.substring(d7 + 1);
+
+      if (ScreenSaverAMPM == "yes") {
+	hour1 = rtc.getTime("%I").substring(0,1);
+	hour2 = rtc.getTime("%I").substring(1,2);
+      } else {
+	hour1 = rtc.getTime("%H").substring(0,1);
+	hour2 = rtc.getTime("%H").substring(1,2);
+      }
+      minute1 = rtc.getTime("%M").substring(0,1);
+      minute2 = rtc.getTime("%M").substring(1,2);
+      second1 = rtc.getTime("%S").substring(0,1);
+      second2 = rtc.getTime("%S").substring(1,2);
+
+//writetext(TextOut, fixedpos, x, y, u8g2_font_5x7_mf, rotation, fontcolor, backgcolor, clear = "");
+
+
+
+    }*/
     else if (newCommand.startsWith("CMDROT,")) {									// Rotate the screen
       if (ScreenSaverSet == true) Cron.disable(cronid2);
       int rot = (newCommand.substring(7)).toInt();
@@ -964,4 +1003,60 @@ void performUpdate(Stream &updateSource, size_t updateSize) {
   } else {
     writetext("Not enough space for OTA!", 1, 10, 115, u8g2_font_luBS10_tf, 0, RED, false, "");
   }
+}
+
+void touchfunctions() {
+#ifdef ILI9341SPI
+  TS_Point p = ts.getPoint();
+  p.x = map(p.x, 0, gfx->height(), gfx->height(), 0);									// flip it around to match the screen.
+  p.y = map(p.y, 0, gfx->width(), gfx->width(), 0);
+  int y = gfx->height() - p.x;
+  int x = p.y;
+
+  if (ts.touched() && TOUCHED == false) {
+    if (ScreenSaverSet == true) Cron.disable(cronid2);
+    while (ts.touched()) delay(100);											// Wait until untouched
+    playpicture("000-touchscreen", -1, -1, 0);	// 000-board with rectangles
+    TOUCHED = true;
+  }
+
+  if (ts.touched() && TOUCHED == true) {
+    while (ts.touched()) delay(100);											// Wait until untouched
+
+  /*  // Print out the remapped (rotated) coordinates
+    Serial.println("p.x:");
+    Serial.print("("); Serial.print(p.x);
+    Serial.print(", "); Serial.print(p.y);
+    Serial.println(")");*/
+
+  /*  // Print out the real  coordinates
+    Serial.println("normal x/y - act_cor is " + actCorename);
+    Serial.print("("); Serial.print(x);
+    Serial.print(", "); Serial.print(y);
+    Serial.println(")"); */
+
+    if (DispWidth == 320) {
+      if (x >  20 && x < 100 && y > 20  && y <  70) Serial.print("touchpressed;button1;");				// Button 1
+      if (x > 120 && x < 200 && y > 20  && y <  70) Serial.print("touchpressed;button2;");				// Button 2
+      if (x > 220 && x < 300 && y > 20  && y <  70) Serial.print("touchpressed;button3;");				// Button 3
+      if (x >  20 && x < 100 && y > 90  && y < 140) Serial.print("touchpressed;button4;");				// Button 4
+      if (x > 120 && x < 200 && y > 90  && y < 140) Serial.print("touchpressed;button5;");				// Button 5
+      if (x > 220 && x < 300 && y > 90  && y < 140) Serial.print("touchpressed;button6;");				// Button 6
+      if (x > 120 && x < 200 && y > 160 && y < 210) Serial.print("touchpressed;button7;");				// Button 7
+      if (x > 220 && x < 300 && y > 160 && y < 210) Serial.print("touchpressed;button8;");				// Button 8
+      if (x > 0 && x < 70 && y > 200 && y < 240) {									// Trash Can
+	footbanner("Don't wake up Oscar!");
+	delay(2000);
+      }
+    }
+
+    if (DispWidth == 480) {
+      // To Do
+    }
+
+    TOUCHED = false;
+    if (ScreenSaverSet == true) Cron.enable(cronid1);
+    playpicture(actCorename, 0, 0, 0);
+  }
+#endif
 }
