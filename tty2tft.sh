@@ -57,6 +57,70 @@ setscreensaver() {
   fi
 }
 
+checkbackchannel() {
+  read -t 0.5 BACKCHANNEL < ${TTYDEV}
+  BACKCHANNEL=$(echo ${BACKCHANNEL} | sed 's/ttyack;//g')
+  # buttons are: RESET, USER, OSD
+  # OSD: mbc raw_seq M
+  # exit to menu: mbc raw_seq MRUUO
+  # reset core/USER: mbc raw_seq MUUO
+  case "${BACKCHANNEL}" in
+    "touchpressed;button1;")
+      ${TOUCHBUTTON1}
+      ;;
+    "touchpressed;button2;")
+      ${TOUCHBUTTON2}
+      ;;
+    "touchpressed;button3;")
+      ${TOUCHBUTTON3}
+      ;;
+    "touchpressed;button4;")
+      ${TOUCHBUTTON4}
+      ;;
+    "touchpressed;button5;")
+      ${TOUCHBUTTON5}
+      ;;
+    "touchpressed;button6;")
+      ${TOUCHBUTTON6}
+      ;;
+    "touchpressed;button7;")
+      sysinfotop="$(top -n 1 | sed -n '2p' | awk '{print $2}')"
+      sysinfofree="$(free -m | sed -n '2p' | awk '{print $4}')MB"
+      sysinfodf1="$(df -h /media/fat | sed -n '2p' | awk '{print $4}')B"
+      ! [ -z "$(grep -m1 "cifs" /etc/mtab)" ] && sysinfodf2="$(df -h -t cifs | sed -n '2p' | awk '{print $4}')B free" || sysinfodf2="n/a"
+      ! [ -z "$(grep -m1 "nfs4" /etc/mtab)" ] && sysinfodf3="$(df -h -t nfs4 | sed -n '2p' | awk '{print $4}')B free" || sysinfodf3="n/a"
+      sysinfotemp="n/a"
+      sysinfoeth0="$(ip -4 -o addr s eth0 | awk '!/^[0-9]*: ?lo|link\/ether/ {gsub("/", " "); print $4}')"
+      sysinfowlan0="$(ip -4 -o addr s wlan0 | awk '!/^[0-9]*: ?lo|link\/ether/ {gsub("/", " "); print $4}')"
+      sysinfocore="$(cat /tmp/CORENAME)"
+      [ -z "${sysinfoeth0}" ] && sysinfoeth0="n/a"
+      [ -z "${sysinfowlan0}" ] && sysinfowlan0="n/a"
+      #echo "CMDSYSINFO,${sysinfotop},${sysinfofree},${sysinfodf},${sysinfotemp},${sysinfoeth0},${sysinfowlan0},${sysinfocore}" > ${TTYDEV}
+      echo "CMDCLS" > ${TTYDEV}
+      writetext "3,2016,0,10,20,MiSTer Sys Info"
+      [ "${SCREENSAVER_AMPM}" = "yes" ] && writetext "2,65535,0,10,40,Time: $(date +%r)      Date: $(date +%F)"
+      [ "${SCREENSAVER_AMPM}" = "no" ] && writetext "2,65535,0,10,40,Time: $(date +%R)      Date: $(date +%F)"
+      writetext "2,65535,0,10,55,CPU: ${sysinfotop} busy"
+      writetext "2,65535,0,10,70,RAM: ${sysinfofree} free"
+      writetext "2,65535,0,10,85,SD: ${sysinfodf1} free"
+      writetext "2,65535,0,10,100,CIFS: ${sysinfodf2}"
+      writetext "2,65535,0,10,115,NFS: ${sysinfodf3}"
+      writetext "2,65535,0,10,130,TEMP: ${sysinfotemp}"
+      writetext "2,65535,0,10,145,IP eth0: ${sysinfoeth0}"
+      writetext "2,65535,0,10,160,IP wlan0: ${sysinfowlan0}"
+      writetext "2,65535,0,10,175,CORE: ${sysinfocore}"
+      ;;
+    "touchpressed;button8;")
+      mbc raw_seq M
+      ;;
+  esac
+}
+
+writetext() {
+  echo "CMDTXT,${1}" > ${TTYDEV}
+  sleep ${WAITSECS}
+}
+
 # ** Main **
 # Check for Command Line Parameter
 if [ "${#}" -ge 1 ]; then							# Command Line Parameter given, override Parameter
@@ -99,16 +163,17 @@ if [ -c "${TTYDEV}" ]; then							# check for tty device
 	(&>/dev/null mpg123 -q --no-control "${SOUNDPATH}/${newcore}."[mM][pP]3 &)	# Play soundfile silently in background
       fi
       if [ "${debug}" = "false" ]; then
-	# wait here for next change of corename, -qq for quietness
-	#inotifywait -qq -e modify "${corenamefile}" & echo $! > /run/tty2tft-inotify.pid
-	#while [ -d /proc/$(</run/tty2tft-inotify.pid) ] ; do sleep 0.2; done
-	inotifywait -qq -e modify "${corenamefile}"
+	while [ "${newcore}" = "${oldcore}" ]; do
+	  inotifywait -qq -e modify -t 1 "${corenamefile}"
+	  ! [ $(cat ${corenamefile}) = "${oldcore}" ] && break
+	  checkbackchannel
+	done
       fi
       if [ "${debug}" = "true" ]; then
-	# but not -qq when debugging
-	#inotifywait -e modify "${corenamefile}" & echo $! > /run/tty2tft-inotify.pid
-	#while [ -d /proc/$(</run/tty2tft-inotify.pid) ] ; do sleep 0.2; done
-	inotifywait -e modify "${corenamefile}"
+	while [ "${newcore}" = "${oldcore}" ]; do
+	  inotifywait -e modify -t 1 "${corenamefile}"
+	  checkbackchannel
+	done
       fi
     else									# CORENAME file not found
      dbug "File ${corenamefile} not found!"
