@@ -19,3 +19,4 @@ static int jpegDrawCallback(JPEGDRAW *pDraw);
 void ftp_debug(const char*);
 void OTAupdate(String displaytype);
 void performUpdate(Stream &updateSource, size_t updateSize);
+void touchfunctions();
