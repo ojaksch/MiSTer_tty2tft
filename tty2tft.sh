@@ -29,11 +29,6 @@ sendrotation() {
   fi
 }
 
-# USB Send-Picture-Data function
-senddata() {
-  echo "CMDCOR,${1}" > ${TTYDEV}						# Instruct the device to load the appropriate picture from SD card
-}
-
 sendtime() {
   timeoffset=$(date +%:::z)
   localtime=$(date '-d now '${timeoffset}' hour' +%s)
@@ -151,7 +146,7 @@ if [ -c "${TTYDEV}" ]; then							# check for tty device
       if [ "${newcore}" != "${oldcore}" ]; then					# proceed only if Core has changed
 	dbug "Send -${newcore}- to ${TTYDEV}."
 	. /media/fat/tty2tft/tty2tft-user.ini					# ReRead INI for changes
-	senddata "${newcore}"							# The "Magic"
+	senddata "CMDCOR,${newcore}"						# The "Magic"
 	oldcore="${newcore}"							# update oldcore variable
 	sendtime								# Update time and date
 	setvideoplay								# Set playing of videos or not
