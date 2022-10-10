@@ -383,9 +383,6 @@ void loop(void) {
       second2 = rtc.getTime("%S").substring(1,2);
 
 //writetext(TextOut, fixedpos, x, y, u8g2_font_5x7_mf, rotation, fontcolor, backgcolor, clear = "");
-
-
-
     }*/
     else if (newCommand.startsWith("CMDROT,")) {									// Rotate the screen
       if (ScreenSaverSet == true) Cron.disable(cronid2);
@@ -950,6 +947,8 @@ void ftp_debug(const char* info) {
 // OTA: https://github.com/espressif/arduino-esp32/blob/master/libraries/Update/examples/SD_Update/SD_Update.ino
 void OTAupdate(String displaytype) {
   if (USE_WIFI) {
+    Cron.disable(cronid1);
+    Cron.disable(cronid2);
     playpicture("000-board", 0, 0, 0);
     writetext("OTA Update", 1, 10, 90, u8g2_font_luBS14_tf, 0, RED, false, "");
 
@@ -958,10 +957,20 @@ void OTAupdate(String displaytype) {
       filehandle = SD.open("/tty2tft-buildver", "r");
       String NewBuildVersion = filehandle.readStringUntil('\n');
       filehandle.close();
+      if (NewBuildVersion == BuildVersion && displaytype != "TESTOTA") {
+	writetext("No update available", 1, 10, 115, u8g2_font_luBS10_tf, 0, RED, false, "");
+	delay(3000);
+	playpicture(actCorename, 0, 0, 0);
+	if (ScreenSaverSet == true) Cron.enable(cronid1);
+	return;
+      }
 
       int loaded_ok_mac = getFile("https://www.tty2tft.de/MiSTer_tty2tft-installer/MAC.html?" + wifiMacString, "/tty2tft-mac");
-      int loaded_ok_bin = getFile("https://www.tty2tft.de/MiSTer_tty2tft-installer/esp32de_" + NewBuildVersion+"_" + ""+ displaytype + ".bin", "/tty2tft-update.bin");
+      int loaded_ok_bin = getFile("https://www.tty2tft.de/MiSTer_tty2tft-installer/esp32de_" + NewBuildVersion +"_" + ""+ displaytype + ".bin", "/tty2tft-update.bin");
       if (loaded_ok_bin == 200) {
+	WiFi.disconnect();												// | - Disable background tasks
+	USE_WIFI = false;												// |
+	Serial.end();													// /
 	footbanner("Download done");
 	delay(1000);
 	footbanner("Updating...");
@@ -976,6 +985,7 @@ void OTAupdate(String displaytype) {
 	ESP.restart();
       }
     }
+    if (ScreenSaverSet == true) Cron.enable(cronid1);
   } else {
     playpicture("000-nowifi", 0, 0, 0);
     footbanner("No WiFi enabled");
@@ -993,9 +1003,9 @@ void performUpdate(Stream &updateSource, size_t updateSize) {
     if (Update.end()) {
       footbanner("OTA done!");
       if (Update.isFinished()) {
-        writetext("Update completed. Rebooting." , 1, 10, 130, u8g2_font_luBS10_tf, 0, RED, false, "");
+	writetext("Update completed. Rebooting." , 1, 10, 130, u8g2_font_luBS10_tf, 0, RED, false, "");
       } else {
-        writetext("Something went wrong!" , 1, 10, 130, u8g2_font_luBS10_tf, 0, RED, false, "");
+	writetext("Something went wrong!" , 1, 10, 130, u8g2_font_luBS10_tf, 0, RED, false, "");
       }
     } else {
       writetext("Error Occurred. Error #: " + String(Update.getError()) , 1, 10, 130, u8g2_font_luBS10_tf, 0, RED, false, "");
