@@ -7,7 +7,7 @@ Table of Contents
 [MJPEG](#mjpeg)  
 [The INI files](#the-ini-files)  
 [The screensaver](#the-screensaver)  
-[Touch function](#touch-function)
+[Touch function](#touch-function)  
 [Commands](#commands)  
 [Color definitions](#color-definitions-used-by-the-display-driver)  
 [Bugs and things to do](#bugs-and-things-still-to-do)  
