@@ -7,6 +7,7 @@ Table of Contents
 [MJPEG](#mjpeg)  
 [The INI files](#the-ini-files)  
 [The screensaver](#the-screensaver)  
+[Touch function](#touch-function)
 [Commands](#commands)  
 [Color definitions](#color-definitions-used-by-the-display-driver)  
 [Bugs and things to do](#bugs-and-things-still-to-do)  
@@ -27,7 +28,7 @@ Other 8-bit bus displays should also work (according to librarys documentation).
 
 The ESP with the parallel TFT shields (not necessary for the SPI shields) needs a [small modifictaion consisting of three cables](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/d1r32-mod.jpg). 
 ([Source](https://github.com/Bodmer/TFT_eSPI#8-bit-parallel-support))  
-In order to get the [Adafruit 2.8 SPI based shields](https://www.adafruit.com/product/1947) work on the Wemos D1 R32, it is necessary to [solder the jumper points (D13/12/D13)](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/ADA28SPI-mod_photo.jpg) on the back of the TFT shield. This is mainly because the Wemos D1 R32 lacks the 6-pin SPI connector.
+In order to get the [Adafruit 2.8 SPI based shields](https://www.adafruit.com/product/1947) work on the Wemos D1 R32, it is necessary to [solder the jumper points (D13/12/D13)](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/ADA28SPI-mod_photo.jpg) on the back of the TFT shield. This is mainly because the Wemos D1 R32 lacks the 6-pin SPI connector. The three wires for parallel displays are NOT needed. 
 
 **Notices:**
 - It turned out that a 480x320 display looks great with pictures, but is somewhat too "slow" to play MJPEG videos really fluently. This is stated by the facts 
@@ -177,6 +178,24 @@ The clock/image shown will change after x seconds set with SCREENSAVER_IVAL
 SCREENSAVER_START="2"           # Start screensaver after x minutes (1-59)
 SCREENSAVER_IVAL="10"           # Screensaver Interval (1-59) seconds
 ```
+
+---
+
+# Touch function
+
+Touch function for the Adafruit 2.8 SPI (see [Hardware](#hardware)) is working. 
+Buttons 1-3 are empty, buttons 4-6 are predefined, buttons 7-8 are hard coded. Buttons 1-6 can be defined by adding/editing 
+them to your **tty2tft-user.ini** (see **tty2tft-system.ini** for examples).  
+
+One useful example could be a volume control (thanks to user warham for the inspiration):
+```
+TOUCHBUTTON1="/media/fat/Scripts/mbc raw_seq :72"
+TOUCHBUTTON2="/media/fat/Scripts/mbc raw_seq :71"
+TOUCHBUTTON3="/media/fat/Scripts/mbc raw_seq :73"
+```
+Button #1 would be then "Volume Down", button #2 "Mute/Unmute", button #3 "Volume Up".  
+There is a [template available](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/SD_card_content/jpg/320x240/#/000-touchscreen.xcf) for 
+creating your own "Touch Menu" which can used together with [GIMP](https://www.gimp.org/)
 
 ---
 
