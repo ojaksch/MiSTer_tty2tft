@@ -26,9 +26,10 @@ Other 8-bit bus displays should also work (according to librarys documentation).
 - 2022-06: ILI9486 (parallel) (480x320) succesfully tested by Salamantecas
 - 2022-06: HX8347D (parallel) (320x200) succesfully tested, many many thanks to Salamantecas!  
 
-The ESP with the parallel TFT shields (not necessary for the SPI shields) needs a [small modifictaion consisting of three cables](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/d1r32-mod.jpg). 
-([Source](https://github.com/Bodmer/TFT_eSPI#8-bit-parallel-support))  
-In order to get the [Adafruit 2.8 SPI based shields](https://www.adafruit.com/product/1947) work on the Wemos D1 R32, it is necessary to [solder the jumper points (D13/12/D13)](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/ADA28SPI-mod_photo.jpg) on the back of the TFT shield. This is mainly because the Wemos D1 R32 lacks the 6-pin SPI connector. The three wires for parallel displays are NOT needed. 
+The ESP with the **parallel** TFT shields needs a [small modifictaion consisting of three cables](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/d1r32-mod.jpg). Nnot necessary for the SPI shields. 
+([Source](https://github.com/Bodmer/TFT_eSPI#8-bit-parallel-support)) 
+
+In order to get the [Adafruit 2.8 SPI based shields](https://www.adafruit.com/product/1947) work on the Wemos D1 R32, it is necessary to [solder the jumper points (D13/12/D13)](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/ADA28SPI-mod_photo.jpg) on the back of the TFT shield. This is mainly because the Wemos D1 R32 lacks the 6-pin SPI connector.
 
 **Notices:**
 - It turned out that a 480x320 display looks great with pictures, but is somewhat too "slow" to play MJPEG videos really fluently. This is stated by the facts 
