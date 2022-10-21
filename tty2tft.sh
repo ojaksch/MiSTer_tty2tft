@@ -26,8 +26,8 @@ sendrotation() {
     dbug "Sending: CMDROT,${ROTATE}"
     echo "CMDROT,${ROTATE}" > ${TTYDEV}						# Send Rotation if set to "yes"
     sleep ${WAITSECS}
-    #echo "CMDDUPD" > ${TTYDEV}							# Updae the screen
-    #sleep ${WAITSECS}
+    echo "CMDDUPD" > ${TTYDEV}							# Updae the screen
+    sleep ${WAITSECS}
   fi
 }
 
