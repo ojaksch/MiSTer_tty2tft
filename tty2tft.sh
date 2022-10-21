@@ -26,6 +26,8 @@ sendrotation() {
     dbug "Sending: CMDROT,${ROTATE}"
     echo "CMDROT,${ROTATE}" > ${TTYDEV}						# Send Rotation if set to "yes"
     sleep ${WAITSECS}
+    #echo "CMDDUPD" > ${TTYDEV}							# Updae the screen
+    #sleep ${WAITSECS}
   fi
 }
 
@@ -106,7 +108,7 @@ checkbackchannel() {
       writetext "2,65535,0,10,175,CORE: ${sysinfocore}"
       ;;
     "touchpressed;button8;")
-      mbc raw_seq M
+      ${TOUCHBUTTON8}
       ;;
   esac
 }
