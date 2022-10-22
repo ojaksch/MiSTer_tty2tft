@@ -22,9 +22,9 @@ dbug() {
 
 # Rotate Display function
 sendrotation() {
-  if ! [ "${ROTATE}" = "no" ]; then
-    dbug "Sending: CMDROT,${ROTATE}"
-    echo "CMDROT,${ROTATE}" > ${TTYDEV}						# Send Rotation if set to "yes"
+  if [ "${ROTATE}" = "yes" ]; then
+    dbug "Sending: CMDROT,3"
+    echo "CMDROT,3" > ${TTYDEV}							# Send Rotation if set to "yes"
     sleep ${WAITSECS}
   fi
 }
