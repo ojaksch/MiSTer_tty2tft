@@ -17,7 +17,8 @@
 
 
 //#define XDEBUG													// Uncomment to receive debug messages by serial output
-String BuildVersion = "221005";
+String BuildVersion = "221022";
+int DispRotation = 1;													// 0=normal portrait, 1=landscape, 2=portrait 180°, 3=landscape 180°
 
 // IMPORTANT: CHANGE THIS TO YOUR CORRESPONDING DEVICE
 #define ILI9341														// Possible values are: HX8347D,ILI9341,ILI9486,ILI9488,ILI9481_18bit,ILI9341SPI
@@ -58,33 +59,33 @@ File32 filehandle;
 #endif
 
 #ifdef ILI9341
-  Arduino_GFX *gfx = new Arduino_ILI9341(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
+  Arduino_GFX *gfx = new Arduino_ILI9341(bus, 32 /* RST */, DispRotation /* rotation */, false /* IPS */);
   const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
 #endif
 #ifdef ILI9481_18bit
-  Arduino_GFX *gfx = new Arduino_ILI9481_18bit(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
+  Arduino_GFX *gfx = new Arduino_ILI9481_18bit(bus, 32 /* RST */, DispRotation /* rotation */, false /* IPS */);
   const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
 #endif
 #ifdef ILI9341SPI
-  Arduino_GFX *gfx = new Arduino_ILI9341(bus, 12 /* RST */, 1 /* rotation */, false /* IPS */);				// used for Adafruit 2.8 SPI based TFT shield
+  Arduino_GFX *gfx = new Arduino_ILI9341(bus, 12 /* RST */, DispRotation /* rotation */, false /* IPS */);		// used for Adafruit 2.8 SPI based TFT shield
   const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
   #include <Adafruit_FT6206.h>												// TOUCH for Adafruit 2.8 SPI based TFT shield
   Adafruit_FT6206 ts = Adafruit_FT6206();
 #endif
 #ifdef ILI9486
-  Arduino_GFX *gfx = new Arduino_ILI9486(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
+  Arduino_GFX *gfx = new Arduino_ILI9486(bus, 32 /* RST */, DispRotation /* rotation */, false /* IPS */);
   const uint8_t *DEFAULT_FONT = u8g2_font_9x15_mf;									// Default font for 480x320 (ILI9486/ILI9488)
 #endif
 #ifdef ILI9488
-  Arduino_GFX *gfx = new Arduino_ILI9488(bus, 32 /* RST */, 1 /* rotation */, false /* IPS */);
+  Arduino_GFX *gfx = new Arduino_ILI9488(bus, 32 /* RST */, DispRotation /* rotation */, false /* IPS */);
   const uint8_t *DEFAULT_FONT = u8g2_font_9x15_mf;									// Default font for 480x320 (ILI9486/ILI9488)
 #endif
 #ifdef HX8347C
-  Arduino_GFX *gfx = new Arduino_HX8347C(bus, 32 /* RST */, 1 /* rotation */, true /* IPS */);
+  Arduino_GFX *gfx = new Arduino_HX8347C(bus, 32 /* RST */, DispRotation /* rotation */, true /* IPS */);
   const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
 #endif
 #ifdef HX8347D
-  Arduino_GFX *gfx = new Arduino_HX8347D(bus, 32 /* RST */, 1 /* rotation */, true /* IPS */);
+  Arduino_GFX *gfx = new Arduino_HX8347D(bus, 32 /* RST */, DispRotation /* rotation */, true /* IPS */);
   const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
 #endif
 
@@ -135,8 +136,8 @@ String minute2 = "";
 String second1 = "";
 String second2 = "";
 int filesize = 0;
-int DispWidth = 0;													// 320, 480
-int DispHeight = 0;													// 240, 320
+int DispWidth = 0;
+int DispHeight = 0;
 int OffsetX = 0;
 int OffsetY = 0;
 float ExtraOffsetX = 1;
@@ -354,40 +355,11 @@ void loop(void) {
     else if (newCommand.startsWith("CMDVIDEOPLAY,")) {									// Play a video or not
       videoplay = newCommand.substring(13);
     }
-/*    else if (newCommand.startsWith("CMDSYSINFO,")) {									// SYSINFO
-      int d1 = newCommand.indexOf(',');
-      int d2 = newCommand.indexOf(',', d1+1 );
-      int d3 = newCommand.indexOf(',', d2+1 );
-      int d4 = newCommand.indexOf(',', d3+1 );
-      int d5 = newCommand.indexOf(',', d4+1 );
-      int d6 = newCommand.indexOf(',', d5+1 );
-      int d7 = newCommand.indexOf(',', d6+1 );
-      String sysinfotop = newCommand.substring(d1 + 1, d2);
-      String sysinfofree = newCommand.substring(d2 + 1, d3);
-      String sysinfodf = newCommand.substring(d3 + 1, d4);
-      String sysinfotemp = newCommand.substring(d4 + 1, d5);
-      String sysinfoeth0 = newCommand.substring(d5 + 1, d6);
-      String sysinfowlan0 = newCommand.substring(d6 + 1, d7);
-      String sysinfocore = newCommand.substring(d7 + 1);
-
-      if (ScreenSaverAMPM == "yes") {
-	hour1 = rtc.getTime("%I").substring(0,1);
-	hour2 = rtc.getTime("%I").substring(1,2);
-      } else {
-	hour1 = rtc.getTime("%H").substring(0,1);
-	hour2 = rtc.getTime("%H").substring(1,2);
-      }
-      minute1 = rtc.getTime("%M").substring(0,1);
-      minute2 = rtc.getTime("%M").substring(1,2);
-      second1 = rtc.getTime("%S").substring(0,1);
-      second2 = rtc.getTime("%S").substring(1,2);
-
-//writetext(TextOut, fixedpos, x, y, u8g2_font_5x7_mf, rotation, fontcolor, backgcolor, clear = "");
-    }*/
     else if (newCommand.startsWith("CMDROT,")) {									// Rotate the screen
       if (ScreenSaverSet == true) Cron.disable(cronid2);
       int rot = (newCommand.substring(7)).toInt();
       gfx->setRotation(rot);
+      DispRotation = rot;
       newCommand = "CMDCOR," + actCorename;
       showpic(corefilename);
       if (ScreenSaverSet == true) Cron.enable(cronid1);
@@ -1018,32 +990,45 @@ void performUpdate(Stream &updateSource, size_t updateSize) {
 void touchfunctions() {
 #ifdef ILI9341SPI
   TS_Point p = ts.getPoint();
-  p.x = map(p.x, 0, gfx->height(), gfx->height(), 0);									// flip it around to match the screen.
-  p.y = map(p.y, 0, gfx->width(), gfx->width(), 0);
-  int y = gfx->height() - p.x;
-  int x = p.y;
+
+  int x;
+  int y;
+  if (DispRotation == 1) {
+    p.x = map(p.x, 0, gfx->height(), gfx->height(), 0);									// flip it around to match the screen.
+    p.y = map(p.y, 0, gfx->width(), gfx->width(), 0);
+  }
+  if (DispRotation == 3) {
+    p.x = map(p.x, 0, gfx->height(), 0, gfx->height());
+    p.y = map(p.y, 0, gfx->width(), 0, gfx->width());									// flip it around to match the screen.
+  }
+  x = p.y;
+  y = gfx->height() - p.x;
 
   if (ts.touched() && TOUCHED == false) {
     if (ScreenSaverSet == true) Cron.disable(cronid2);
     while (ts.touched()) delay(100);											// Wait until untouched
-    playpicture("000-touchscreen", -1, -1, 0);	// 000-board with rectangles
+    playpicture("000-touchscreen", -1, -1, 0);										// 000-board with rectangles
     TOUCHED = true;
   }
 
   if (ts.touched() && TOUCHED == true) {
     while (ts.touched()) delay(100);											// Wait until untouched
 
-  /*  // Print out the remapped (rotated) coordinates
-    Serial.println("p.x:");
+    /* // Print out the remapped (rotated) coordinates
+    Serial.println("");
+    Serial.print("p.x/y: ");
     Serial.print("("); Serial.print(p.x);
     Serial.print(", "); Serial.print(p.y);
-    Serial.println(")");*/
+    Serial.println(")");
 
-  /*  // Print out the real  coordinates
-    Serial.println("normal x/y - act_cor is " + actCorename);
+    // Print out the real  coordinates
+    Serial.print("normal x/y: ");
     Serial.print("("); Serial.print(x);
     Serial.print(", "); Serial.print(y);
-    Serial.println(")"); */
+    Serial.println(")");
+    Serial.println("rotation: " + String(DispRotation));
+    Serial.println("act_cor: " + actCorename);
+    Serial.println("-----------------"); */
 
     if (DispWidth == 320) {
       if (x >  20 && x < 100 && y > 20  && y <  70) Serial.print("touchpressed;button1;");				// Button 1
