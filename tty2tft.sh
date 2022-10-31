@@ -88,6 +88,7 @@ checkbackchannel() {
       sysinfoeth0="$(ip -4 -o addr s eth0 | awk '!/^[0-9]*: ?lo|link\/ether/ {gsub("/", " "); print $4}')"
       sysinfowlan0="$(ip -4 -o addr s wlan0 | awk '!/^[0-9]*: ?lo|link\/ether/ {gsub("/", " "); print $4}')"
       sysinfocore="$(cat /tmp/CORENAME)"
+      let sysinfocpuclk=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq)/1000
       [ -z "${sysinfoeth0}" ] && sysinfoeth0="n/a"
       [ -z "${sysinfowlan0}" ] && sysinfowlan0="n/a"
       #echo "CMDSYSINFO,${sysinfotop},${sysinfofree},${sysinfodf},${sysinfotemp},${sysinfoeth0},${sysinfowlan0},${sysinfocore}" > ${TTYDEV}
@@ -104,6 +105,7 @@ checkbackchannel() {
       writetext "2,65535,0,10,145,IP eth0: ${sysinfoeth0}"
       writetext "2,65535,0,10,160,IP wlan0: ${sysinfowlan0}"
       writetext "2,65535,0,10,175,CORE: ${sysinfocore}"
+      [ -e /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ] && writetext "2,65535,0,10,190,CPU clock: ${sysinfocpuclk} MHz"
       ;;
     "touchpressed;button8;")
       ${TOUCHBUTTON8}
