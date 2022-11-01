@@ -195,7 +195,7 @@ TOUCHBUTTON2="/media/fat/Scripts/mbc raw_seq :71"
 TOUCHBUTTON3="/media/fat/Scripts/mbc raw_seq :73"
 ```
 Button #1 would be then "Volume Down", button #2 "Mute/Unmute", button #3 "Volume Up". Keycodes are taken from [this page](https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h).  
-There are [templates available](https://github.com/ojaksch/MiSTer_tty2tft/tree/main/pictures) for 
+There are [templates available in 320x240/480x320](https://github.com/ojaksch/MiSTer_tty2tft/tree/main/pictures) for 
 creating your own "Touch Menu" which can used together with [GIMP](https://www.gimp.org/)
 
 ---
