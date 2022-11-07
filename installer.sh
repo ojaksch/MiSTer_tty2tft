@@ -19,7 +19,7 @@ flashesp() {
 	if [ "${TTY2TFT_UPDATE_BY}" = "WEB" ]; then
 	  echo "CMDOTAUPDATE,${TTY2TFT_DISPLAY}" > ${TTYDEV}
 	else
-	  wget -q ${REPOSITORY_URL2}/MAC.html?${MAC} ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/esp32de_${BUILDVER}_${TTY2TFT_DISPLAY}.bin
+	  wget -q --content-disposition ${REPOSITORY_URL2}/MAC.html?${MAC} ${REPOSITORY_URL2}/boot_app0.bin ${REPOSITORY_URL2}/bootloader_dio_80m.bin ${REPOSITORY_URL2}/partitions.bin ${REPOSITORY_URL2}/esp32de_${BUILDVER}_${TTY2TFT_DISPLAY}.bin?mac=${MAC}
 	  if ! [ -e esp32de_${BUILDVER}_${TTY2TFT_DISPLAY}.bin ]; then
 	    echo -e "${fred}Unfortunately something went wrong!${freset}"
 	    echo -e "${fred}Possible causes:${freset}"
