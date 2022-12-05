@@ -13,6 +13,7 @@ Table of Contents
 [Bugs and things to do](#bugs-and-things-still-to-do)  
 [Compiling](#compiling)  
 [License](#license)  
+[Licensees](#licensees)  
 
 ---
 
@@ -289,3 +290,13 @@ are using the Arduino IDE, please select the "ESP32 Dev Module" and "Minimal SPI
 
 ![CC BY-NC-SA 4.0](../pictures/by-nc-sa.eu.png)  
 [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+---
+
+# Licensees
+
+Official Licensees to whom I'm very grateful:
+- OnCor/MiSTer Consoles  
+https://misterfpga.org/search.php?author_id=659&sr=posts  
+https://misterfpga.org/search.php?author_id=6780&sr=posts  
+
