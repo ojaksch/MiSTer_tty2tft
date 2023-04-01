@@ -61,24 +61,27 @@ checkbackchannel() {
   # reset core/USER: mbc raw_seq MUUO
   case "${BACKCHANNEL}" in
     "touchpressed;button1;")
-      ${TOUCHBUTTON1}
+      ${TOUCHBUTTON01}
       ;;
     "touchpressed;button2;")
-      ${TOUCHBUTTON2}
+      ${TOUCHBUTTON02}
       ;;
     "touchpressed;button3;")
-      ${TOUCHBUTTON3}
+      ${TOUCHBUTTON03}
       ;;
     "touchpressed;button4;")
-      ${TOUCHBUTTON4}
+      ${TOUCHBUTTON04}
       ;;
     "touchpressed;button5;")
-      ${TOUCHBUTTON5}
+      ${TOUCHBUTTON05}
       ;;
     "touchpressed;button6;")
-      ${TOUCHBUTTON6}
+      ${TOUCHBUTTON06}
       ;;
     "touchpressed;button7;")
+      ${TOUCHBUTTON07}
+      ;;
+    "touchpressed;button8;")
       sysinfotop="$(top -n 1 | sed -n '2p' | awk '{print $2}')"
       sysinfofree="$(free -m | sed -n '2p' | awk '{print $4}')MB"
       sysinfodf1="$(df -h /media/fat | sed -n '2p' | awk '{print $4}')B"
@@ -107,8 +110,62 @@ checkbackchannel() {
       writetext "2,65535,0,10,175,CORE: ${sysinfocore}"
       [ -e /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ] && writetext "2,65535,0,10,190,CPU clock: ${sysinfocpuclk} MHz"
       ;;
-    "touchpressed;button8;")
-      ${TOUCHBUTTON8}
+    "touchpressed;button9;")
+      ${TOUCHBUTTON09}
+      ;;
+    "touchpressed;button10;")
+      ${TOUCHBUTTON10}
+      ;;
+    "touchpressed;button11;")
+      ${TOUCHBUTTON11}
+      ;;
+    "touchpressed;button12;")
+      ${TOUCHBUTTON12}
+      ;;
+    "touchpressed;button13;")
+      ${TOUCHBUTTON13}
+      ;;
+    "touchpressed;button14;")
+      ${TOUCHBUTTON14}
+      ;;
+    "touchpressed;button15;")
+      ${TOUCHBUTTON15}
+      ;;
+    "touchpressed;button16;")
+      ${TOUCHBUTTON16}
+      ;;
+    "touchpressed;button17;")
+      ${TOUCHBUTTON17}
+      ;;
+    "touchpressed;button18;")
+      ${TOUCHBUTTON18}
+      ;;
+    "touchpressed;button19;")
+      ${TOUCHBUTTON19}
+      ;;
+    "touchpressed;button20;")
+      ${TOUCHBUTTON20}
+      ;;
+    "touchpressed;button21;")
+      ${TOUCHBUTTON21}
+      ;;
+    "touchpressed;button22;")
+      ${TOUCHBUTTON22}
+      ;;
+    "touchpressed;button23;")
+      ${TOUCHBUTTON23}
+      ;;
+    "touchpressed;button24;")
+      ${TOUCHBUTTON24}
+      ;;
+    "touchpressed;button25;")
+      ${TOUCHBUTTON25}
+      ;;
+    "touchpressed;button26;")
+      ${TOUCHBUTTON26}
+      ;;
+    "touchpressed;button27;")
+      ${TOUCHBUTTON27}
       ;;
   esac
 }
@@ -120,7 +177,7 @@ writetext() {
 
 # ** Main **
 # Check for Command Line Parameter
-if [ "${#}" -ge 1 ]; then							# Command Line Parameter given, override Parameter
+if [ "${#}" -ge 1 ] && ! [ "${1}" = "tty2x" ]; then				# Command Line Parameter given, override Parameter
   echo -e "\nUsing Command Line Parameter"
   TTYDEV=${1}									# Set TTYDEV with Parameter 1
   if [ -n "${2}" ]; then							# Parameter 2 Baudrate
@@ -159,6 +216,7 @@ if [ -c "${TTYDEV}" ]; then							# check for tty device
 	sleep ${PLAYSOUND_DELAY}
 	(&>/dev/null mpg123 -q --no-control "${SOUNDPATH}/${newcore}."[mM][pP]3 &)	# Play soundfile silently in background
       fi
+      [ "${1}" = "tty2x" ] && exit 9
       if [ "${debug}" = "false" ]; then
 	while [ "${newcore}" = "${oldcore}" ]; do
 	  inotifywait -qq -e modify -t 1 "${corenamefile}"

@@ -8,8 +8,10 @@ Table of Contents
 [The INI files](#the-ini-files)  
 [The screensaver](#the-screensaver)  
 [Touch function](#touch-function)  
+[Swiping](#touch-swipe)  
 [Commands](#commands)  
 [Color definitions](#color-definitions-used-by-the-display-driver)  
+[Initial Animation](initial_animation)  
 [Bugs and things to do](#bugs-and-things-still-to-do)  
 [Compiling](#compiling)  
 [License](#license)  
@@ -50,8 +52,16 @@ Follow the instructions below. Don't continue with the next step if something wo
 Call for help first.
 
 - Copy the **content** of *SD_card_content* to a reliable FAT32 formatted SD card <32GB. While beeing there you can fill up the subdirectorys with your own content.
-The file **wifi.txt** is a five-liner text file containing your WiFi credentials (SSID and password, URL of a picture server for online picture access (set to 127.0.0.1 = disabled), a WiFi timeout and a WiFi country code.
-Only needed if you want to use WiFi, otherwise leave it as it is. When editing, use an editor capable of Linux linebreaks, like notepad++ (Windows).
+The file **wifi.txt** file contains some important settings only needed if you want to use WiFi, otherwise leave it as it is. When editing, use an editor capable of Linux linebreaks, like notepad++ (Windows).:
+  - 1st line: WiFi SSID
+  - 2nd line: WiFi Password
+  - 3rd line: URL of a picture server for online picture access (set to 127.0.0.1 = disabled)
+  - 4th line: WiFi timeout
+  - 5th line: WiFi country code
+  - 6th line: Opening screen (ORG for my version, OWN for *your* design
+  - 7th line: Display orientation (1 is normal, 3 rotated by 180°)
+  - 8th line: Divisor for screen's X-resolution/axis to swipe
+  - 9th line: Divisor for screen's Y-resolution/axis to swipe
 
 - Open a ssh-shell to your MiSTer or open a console at MiSTer and logon.
 
@@ -186,7 +196,7 @@ SCREENSAVER_IVAL="10"           # Screensaver Interval (1-59) seconds
 # Touch function
 
 Touch function for the Adafruit 2.8 SPI (see [Hardware](#hardware)) is working. 
-Buttons 1-3 are empty, buttons 4-6 are predefined, buttons 7-8 are hard coded. Buttons 1-6 can be defined by adding/editing 
+Button 7 is predefined and hard coded for SysInfo. All other buttons can be defined by adding/editing 
 them to your **tty2tft-user.ini** (see **tty2tft-system.ini** for examples).  
 
 One useful example could be a volume control (thanks to user warham for the inspiration):
@@ -198,6 +208,20 @@ TOUCHBUTTON3="/media/fat/Scripts/mbc raw_seq :73"
 Button #1 would be then "Volume Down", button #2 "Mute/Unmute", button #3 "Volume Up". Keycodes are taken from [this page](https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h).  
 There are [templates available in 320x240/480x320](https://github.com/ojaksch/MiSTer_tty2tft/tree/main/pictures) for 
 creating your own "Touch Menu" which can used together with [GIMP](https://www.gimp.org/)
+
+---
+
+# Swiping
+
+We are having three touch screens with 27 buttons. To enter the first touch screen just touch your screen when a picture is displayed. 
+To navigate between the three screens swipe to the left or right on the X axis of the screen. Swipe to the left to go back one screen, 
+swipe to the right to enter the next screen. To exit the touch screen swipe to the top or bottom.
+
+The next picture shows the (default) route how far to swipe. The default is a third of display's X width and 1.3 of display's Y height. 
+Diagonal swiping is supported, but a swipe on Y is preferred over X.  
+These settings can be defined -  see [Software](#software) and there "Divisor for screen"...
+
+![How far to swipe](../pictures/swipeway.png)
 
 ---
 
@@ -215,6 +239,7 @@ If you tend to extend/change/rewrite tty2tft's Daemon (the program which is driv
 | CMDDINVOFF                      | Invert screen off (ILI9341 only) |
 | CMDRESET                        | Restart ESP |
 | CMDSNAM                         | Show picture's name |
+| CMDOTAUPDATE,PARAM              | Start OTA update for display PARAM
 | CMDROT,PARAM                    | Rotate screen (0=none/Portrait, 1=90°/Landscape, 2=180°, 3=270°) |
 | CMDDUPD                         | Refresh screen |
 | CMDDELETE                       | Delete actual picture/video from SD |
@@ -255,6 +280,15 @@ An upload with CMDUPLOAD saves the picture/video on SD.
 | ORANGE      | 0xFD20 | 64800 | 255, 165,   0 |
 | GREENYELLOW | 0xAFE5 | 45029 | 173, 255,  41 |
 | PINK        | 0xFC18 | 64536 | 255, 130, 198 |
+
+---
+
+# Initial Animation
+
+When tty2tft has finished booting, it is showing my version of an animation plus some text, IP address and version. 
+If you want to use your own animation, just follow the hints in the [documentation](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/doc/README.md#mjpeg]documentation), 
+save your MPJEG as "000-arcade.mjpeg" to SD overwriting my original one and change the 6th line of wifi.txt from ORG 
+to OWN, which disables additional text output over your video after playing.
 
 ---
 

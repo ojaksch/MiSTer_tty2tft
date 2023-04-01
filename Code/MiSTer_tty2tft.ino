@@ -6,6 +6,7 @@
 // CronAlarms			https://github.com/Martin-Laclaustra/CronAlarms
 // U8g2				https://github.com/olikraus/u8g2
 // ftpsrv			https://github.com/schreibfaul1/ESP32FTPServer
+// Adafruit_FT6206_Library	https://github.com/adafruit/Adafruit_FT6206_Library	(for ILI9341SPI)
 //
 // edit JPEGDEC.h and change the values of
 // JPEG_FILE_BUF_SIZE and MAX_BUFFERED_PIXELS to 4096
@@ -14,10 +15,15 @@
 // Don't forget to set your display type - see line IMPORTANT: CHANGE THIS TO YOUR CORRESPONDING DEVICE below
 //
 // crc32: https://github.com/bakercp/CRC32
+// swipe: https://www.codeproject.com/Articles/5287929/Swipe-Gestures-Using-a-TFT-Display
+//	  https://www.hackster.io/rakshith_bk/esp32-touch-slider-217156
+
+
+// Neuer wifi.txt Parameter: ORG/OWN
 
 
 //#define XDEBUG													// Uncomment to receive debug messages by serial output
-String BuildVersion = "221022";
+String BuildVersion = "230331";
 int DispRotation = 1;													// 0=normal portrait, 1=landscape, 2=portrait 180°, 3=landscape 180°
 
 // IMPORTANT: CHANGE THIS TO YOUR CORRESPONDING DEVICE
@@ -26,6 +32,8 @@ int DispRotation = 1;													// 0=normal portrait, 1=landscape, 2=portrait 
 // SD card access
 #ifdef ILI9341SPI
   #define SD_CS 17													// used for Adafruit 2.8 SPI based TFT shield
+#elif defined(ILI9341SPIAZ)
+  #define SD_CS 5													// used for AZ-Delivery 2.8 SPI based TFT shield
 #else
   #define SD_CS 5													// used for all other shields
 #endif
@@ -54,6 +62,8 @@ File32 filehandle;
 #include <Arduino_GFX_Library.h>											// Hardware-specific library
 #ifdef ILI9341SPI
   Arduino_DataBus *bus = new Arduino_ESP32SPI(13 /* DC */, 5 /* CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */, VSPI /* spi_num */);		// used for Adafruit 2.8 SPI based TFT shield
+#elif defined(ILI9341SPIAZ)
+  Arduino_DataBus *bus = new Arduino_ESP32SPI( 4 /* DC */, 5 /* CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */, VSPI /* spi_num */);		// used for AZ-Delivery 2.8 SPI based TFT shield
 #else
   Arduino_DataBus *bus = new Arduino_ESP32PAR8(15 /* DC */, 33 /* CS */, 4 /* WR */, 2 /* RD */, 12 /* D0 */, 13 /* D1 */, 26 /* D2 */, 25 /* D3 */, 17 /* D4 */, 16 /* D5 */, 27 /* D6 */, 14 /* D7 */);
 #endif
@@ -61,32 +71,36 @@ File32 filehandle;
 #ifdef ILI9341
   Arduino_GFX *gfx = new Arduino_ILI9341(bus, 32 /* RST */, DispRotation /* rotation */, false /* IPS */);
   const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
-#endif
-#ifdef ILI9481_18bit
+  #include "touch.h"													// TOUCH for AZ-Delivery 2.8 SPI based TFT shield
+#elif defined(ILI9481_18bit)
   Arduino_GFX *gfx = new Arduino_ILI9481_18bit(bus, 32 /* RST */, DispRotation /* rotation */, false /* IPS */);
   const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
-#endif
-#ifdef ILI9341SPI
+  #include "touch.h"													// TOUCH for AZ-Delivery 2.8 SPI based TFT shield
+#elif defined(ILI9341SPI)
   Arduino_GFX *gfx = new Arduino_ILI9341(bus, 12 /* RST */, DispRotation /* rotation */, false /* IPS */);		// used for Adafruit 2.8 SPI based TFT shield
   const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
   #include <Adafruit_FT6206.h>												// TOUCH for Adafruit 2.8 SPI based TFT shield
   Adafruit_FT6206 ts = Adafruit_FT6206();
-#endif
-#ifdef ILI9486
+#elif defined(ILI9341SPIAZ)
+  Arduino_GFX *gfx = new Arduino_ILI9341(bus, 22 /* RST */, DispRotation /* rotation */, false /* IPS */);		// used for Adafruit 2.8 SPI based TFT shield
+  const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
+  #include "touch.h"													// TOUCH for AZ-Delivery 2.8 SPI based TFT shield
+#elif defined(ILI9486)
   Arduino_GFX *gfx = new Arduino_ILI9486(bus, 32 /* RST */, DispRotation /* rotation */, false /* IPS */);
   const uint8_t *DEFAULT_FONT = u8g2_font_9x15_mf;									// Default font for 480x320 (ILI9486/ILI9488)
-#endif
-#ifdef ILI9488
+  #include "touch.h"													// TOUCH for AZ-Delivery 2.8 SPI based TFT shield
+#elif defined(ILI9488)
   Arduino_GFX *gfx = new Arduino_ILI9488(bus, 32 /* RST */, DispRotation /* rotation */, false /* IPS */);
   const uint8_t *DEFAULT_FONT = u8g2_font_9x15_mf;									// Default font for 480x320 (ILI9486/ILI9488)
-#endif
-#ifdef HX8347C
+  #include "touch.h"													// TOUCH for AZ-Delivery 2.8 SPI based TFT shield
+#elif defined(HX8347C)
   Arduino_GFX *gfx = new Arduino_HX8347C(bus, 32 /* RST */, DispRotation /* rotation */, true /* IPS */);
   const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
-#endif
-#ifdef HX8347D
+  #include "touch.h"													// TOUCH for AZ-Delivery 2.8 SPI based TFT shield
+#elif defined(HX8347D)
   Arduino_GFX *gfx = new Arduino_HX8347D(bus, 32 /* RST */, DispRotation /* rotation */, true /* IPS */);
   const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
+  #include "touch.h"													// TOUCH for AZ-Delivery 2.8 SPI based TFT shield
 #endif
 
 // RTC functions
@@ -166,8 +180,12 @@ char cron2[15];														// Cron timer #2
 String WSSID = "SSID";
 String WPASS = "PW";
 String WIFItimeout = "20";
-char *WIFIcountry = "US";
-bool TOUCHED = false;
+char *WIFICountry[2];
+String OwnMenu = "ORG";
+int touchcoordX;
+int touchcoordY;
+String divisorX;
+String divisorY;
 
 String URL = "https://127.0.0.1";
 bool USE_WIFI = false;
@@ -228,28 +246,50 @@ void setup(void) {
     WSSID = filehandle.readStringUntil('\n');
     WPASS = filehandle.readStringUntil('\n');
     URL = filehandle.readStringUntil('\n');
+
     WIFItimeout = filehandle.readStringUntil('\n');
-    Dummystring = filehandle.readStringUntil('\n');
     if (WIFItimeout.isEmpty()) WIFItimeout = "20";
-    if (Dummystring.isEmpty()) WIFIcountry = "US";
+
+    String WIFIcountry = filehandle.readStringUntil('\n');
+    if (WIFIcountry.isEmpty()) {
+      WIFIcountry = "US";
+    } else {
+      WIFIcountry.toCharArray(*WIFICountry, 2);
+    }
+
     if (WSSID == "SSID" && WPASS == "PW") {
       writetext("No valid WiFi credentials, WiFi disabled.", 1, 20, 30, DEFAULT_FONT, 0, YELLOW, false, "");
       delay(1000);
     } else {
       USE_WIFI = true;													// valid SSID/PW found
     }
+
+    OwnMenu = filehandle.readStringUntil('\n');
+    if (OwnMenu != "ORG" && OwnMenu != "OWN") OwnMenu = "ORG";
+
+    String rot = filehandle.readStringUntil('\n');
+    if (rot.isEmpty()) rot == "1";
+    gfx->setRotation(rot.toInt());
+    DispRotation = rot.toInt();
+
+    divisorX = filehandle.readStringUntil('\n');
+    if (divisorX.isEmpty()) divisorX = "3";
+    divisorY = filehandle.readStringUntil('\n');
+    if (divisorY.isEmpty()) divisorY = "1.5";
   }
   filehandle.close();
 
   mjpeg_buf = (uint8_t *) malloc(MJPEG_BUFFER_SIZE);									// Video buffer
 
   showarcade();														// Initial screen
-  writetext("- tty2tft -", 0, 127, 85, DEFAULT_FONT, 0, random(0xFFFF), false, "");
-  writetext("Welcome!", 0, 138, 98, DEFAULT_FONT, 0, random(0xFFFF), false, "");
+  if (OwnMenu == "ORG") {
+    writetext("- tty2tft -", 0, 127, 85, DEFAULT_FONT, 0, random(0xFFFF), false, "");
+    writetext("Welcome!", 0, 138, 98, DEFAULT_FONT, 0, random(0xFFFF), false, "");
+  }
   writetext(BuildVersion, 0, 275, 233, DEFAULT_FONT, 3, YELLOW, false, "");
 
   #ifdef ILI9341SPI
-    if (!ts.begin(40)) {												// TOUCH
+    if (!ts.begin(160)) {												// TOUCH - The bigger the threshold, the more sensible is the touch
       writetext("NT", 0, 10, 233, DEFAULT_FONT, 3, RED, false, "");
     } else {
       writetext("T", 0, 10, 233, DEFAULT_FONT, 3, RED, false, "");
@@ -257,7 +297,8 @@ void setup(void) {
   #endif
 
   if (USE_WIFI) {
-    wifi_country_t WIFIcountry;
+    // https://github.com/esp8266/Arduino/blob/master/tools/sdk/include/user_interface.h#L750-L760
+    //wifi_country_t WIFIcountry;		// https://github.com/esp8266/Arduino/issues/7083
     WiFi.mode(WIFI_STA);												// Explicit use of STA mode
     WiFi.setAutoConnect(true);
     WiFi.setAutoReconnect(true);
@@ -267,13 +308,15 @@ void setup(void) {
       WiFi.disconnect();												// Disconnect from AP if it was previously connected
       WiFi.begin(WSSID.c_str(), WPASS.c_str(), WIFI_ALL_CHANNEL_SCAN);
       WiFi.persistent(true);												// Store Wifi configuration in Flash?
-      writetext("Waiting for WiFi", 0, 105, 125, DEFAULT_FONT, 0, YELLOW, false, "");
-      if (i == 2) writetext("(" + String(i) + "nd try)", 0, 135, 138, DEFAULT_FONT, 0, YELLOW, false, "");
-      if (i == 3) writetext("(" + String(i) + "rd try)", 0, 135, 138, DEFAULT_FONT, 0, YELLOW, false, "");
+      if (OwnMenu == "ORG") writetext("Waiting for WiFi", 0, 105, 125, DEFAULT_FONT, 0, YELLOW, false, "");
+      if (i == 2 && OwnMenu == "ORG") writetext("(" + String(i) + "nd try)", 0, 135, 138, DEFAULT_FONT, 0, YELLOW, false, "");
+      if (i == 3 && OwnMenu == "ORG") writetext("(" + String(i) + "rd try)", 0, 135, 138, DEFAULT_FONT, 0, YELLOW, false, "");
       while (WiFi.status() != WL_CONNECTED && (millis() - startTime) <= WIFItimeout.toInt() * 1000) {			// Try to connect for 5 seconds
-	rotatespinner();
-	rectfill(210, 117, 15, 15, BLACK);
-	writetext(String(spinner), 0, 210, 125, DEFAULT_FONT, 0, YELLOW, false, "");
+	if (OwnMenu == "ORG") {
+	  rotatespinner();
+	  rectfill(210, 117, 15, 15, BLACK);
+	  writetext(String(spinner), 0, 210, 125, DEFAULT_FONT, 0, YELLOW, false, "");
+	}
 	#ifdef XDEBUG
 	  Serial.print("WiFi status: ");
 	  Serial.println(WiFi.status());
@@ -282,20 +325,23 @@ void setup(void) {
       }
       if (WiFi.status() == WL_CONNECTED) break;
     }
-    rectfill(100, 115, 125, 25, BLACK);											// Clear the row of "Establishing connection"
-// //
+    if (OwnMenu == "ORG") rectfill(100, 115, 125, 25, BLACK);								// Clear the row of "Establishing connection"
+
     if (WiFi.localIP().toString() == "0.0.0.0") {
-      writetext("Couldn't connect", 0, 115, 117, DEFAULT_FONT, 0, RED, false, "");
-      writetext("Continuing w/o WiFi", 0, 105, 127, DEFAULT_FONT, 0, RED, false, "");
       USE_WIFI = false;
+      if (OwnMenu == "ORG") {
+        writetext("Couldn't connect", 0, 115, 117, DEFAULT_FONT, 0, RED, false, "");
+        writetext("Continuing w/o WiFi", 0, 105, 127, DEFAULT_FONT, 0, RED, false, "");
+      }
     } else {
-      writetext("IP: " + WiFi.localIP().toString(), 0, 110, 122, DEFAULT_FONT, 0, random(0xFFFF), false, "");
+      if (OwnMenu == "ORG") writetext("IP: " + WiFi.localIP().toString(), 0, 110, 122, DEFAULT_FONT, 0, random(0xFFFF), false, "");
     }
 
   }
-  writetext("Waiting for", 0, 128, 153, DEFAULT_FONT, 0, random(0xFFFF), false, "");
-  writetext("Menu or Core", 0, 125, 163, DEFAULT_FONT, 0, random(0xFFFF), false, "");
-  //  writetext(rtc.getTime(), 0, 114, 132, DEFAULT_FONT, 0, random(0xFFFF), false, "");
+  if (OwnMenu == "ORG") {
+    writetext("Waiting for", 0, 128, 153, DEFAULT_FONT, 0, random(0xFFFF), false, "");
+    writetext("Menu or Core", 0, 125, 163, DEFAULT_FONT, 0, random(0xFFFF), false, "");
+  }
   menuloadad = 1;
 
   if (USE_WIFI) ftpSrv.begin(SD, FTP_USERNAME, FTP_PASSWORD);								//username, password for ftp.
@@ -347,7 +393,7 @@ void loop(void) {
       Serial.println("TFTESP32;" + BuildVersion + ";" + wifiMacString + ";");
     }
 
-    else if (newCommand.startsWith("CMDOTAUPDATE,")) {										// Send hardware info, BuildVersion and MAC address
+    else if (newCommand.startsWith("CMDOTAUPDATE,")) {									// Start OTA update for display xxx
       displaytype = newCommand.substring(13);
       OTAupdate(displaytype);
     }
@@ -584,21 +630,24 @@ void fetchfile(String fetchURL, String fetchfilename) {
 
 void showarcade() {
   playvideo("000-arcade", 0, 0);
-  clearmenu();
+  if (OwnMenu == "ORG") clearmenu();
 }
 
 void showmenu() {
   if (SD.exists(folderjpg + "M/MENU.jpg")) {
-    actCorename = "MENU";
-    playpicture("MENU", 0, 0, 0);
     menuloadad = 0;
+    if (OwnMenu == "ORG") {
+      actCorename = "MENU";
+      playpicture("MENU", 0, 0, 0);
+    }
   } else {
     if (menuloadad == 0) showarcade();											// Arcade cabinet only if not already loaded
+    menuloadad = 1;
+    if (OwnMenu == "ORG") { 
       clearmenu();
       actCorename = "000-sorgcat";
       playpicture("000-sorgcat", 135 * ExtraOffsetX, 95 * ExtraOffsetY, 0);
-      //playvideo("000-sorgcat", 135, 95);
-      menuloadad = 1;
+    }
   }
 }
 
@@ -860,7 +909,7 @@ int getFile(String url, String corefilename) {
 
     int httpCode = http.GET();												// Start connection and send HTTP header
     if (httpCode > 0) {													// HTTP header has been send and Server response header has been handled
-      filehandle = SD.open(corefilename,  "w+");
+      filehandle = SD.open(corefilename, "w+");
       if (!filehandle) {
 	Serial.println("file open failed");
 	return 0;
@@ -988,11 +1037,111 @@ void performUpdate(Stream &updateSource, size_t updateSize) {
 }
 
 void touchfunctions() {
-#ifdef ILI9341SPI
-  TS_Point p = ts.getPoint();
+  int x = 0;
+  int y = 0;
+  int xfirst = 0;
+  int yfirst = 0;
+  int xlast = 0;
+  int ylast = 0;
+  int touchscreen = 1;
+  bool TOUCHED = false;
+  int buttonpressed = 0;
+  int buttonoffset = 0;
 
-  int x;
-  int y;
+  if (ts.touched() && TOUCHED == false) {
+    if (ScreenSaverSet == true) {
+      Cron.disable(cronid1);
+      Cron.disable(cronid2);
+    }
+    while (ts.touched()) delay(100);											// Wait until untouched
+    playpicture("000-touchscreen" + String(touchscreen), -1, -1, 0);							// 000-board with rectangles
+    TOUCHED = true;
+  }
+
+  while (TOUCHED == true) {
+    while (!ts.touched()) delay(100);											// Wait until touched again
+    gettouchcoord(ts.getPoint());
+    xfirst = touchcoordX;												// Save starting point
+    yfirst = touchcoordY;
+    while (ts.touched()) gettouchcoord(ts.getPoint());									// Get coordinates ongoing
+    xlast = touchcoordX;												// Save ending point after releasing
+    ylast = touchcoordY;
+    x = touchcoordX;
+    y = touchcoordY;
+    while (ts.touched()) delay(100);											// Wait until untouched
+
+    if ((ylast - yfirst) > (DispHeight / divisorY.toFloat())) {
+      touchscreen = 0;
+      TOUCHED = false;
+      if (ScreenSaverSet == true) Cron.enable(cronid1);
+      playpicture(actCorename, 0, 0, 0);
+      break;
+    } else if ((ylast - yfirst) < (DispHeight / divisorY.toFloat()) * -1) {
+      touchscreen = 0;
+      TOUCHED = false;
+      if (ScreenSaverSet == true) Cron.enable(cronid1);
+      playpicture(actCorename, 0, 0, 0);
+      break;
+    }
+
+    if ((xlast - xfirst) > (DispWidth / divisorX.toFloat())) {							// Continuous touch > a third of screen
+      touchscreen--;
+      if (touchscreen < 1) {
+	touchscreen = 1;
+      } else {
+        x = 0; y = 0;
+	playpicture("000-touchscreen" + String(touchscreen), -1, -1, 0);
+      }
+    } else if ((xlast - xfirst) < (DispWidth / divisorX.toFloat()) * -1) {
+      touchscreen++;
+      if (touchscreen > 3) {
+	touchscreen = 3;
+      } else {
+        x = 0; y = 0;
+	playpicture("000-touchscreen" + String(touchscreen), -1, -1, 0);
+      }
+    }
+
+    if (touchscreen > 0 && x > 0 && y > 0) {
+      if (touchscreen == 1) buttonoffset = 0;
+      if (touchscreen == 2) buttonoffset = 9;
+      if (touchscreen == 3) buttonoffset = 18;
+      if (DispWidth == 320) {
+	if (x >  20 && x < 100 && y > 20  && y <  70) buttonpressed = 1 + buttonoffset;
+	if (x > 120 && x < 200 && y > 20  && y <  70) buttonpressed = 2 + buttonoffset;
+	if (x > 220 && x < 300 && y > 20  && y <  70) buttonpressed = 3 + buttonoffset;
+	if (x >  20 && x < 100 && y > 90  && y < 140) buttonpressed = 4 + buttonoffset;
+	if (x > 120 && x < 200 && y > 90  && y < 140) buttonpressed = 5 + buttonoffset;
+	if (x > 220 && x < 300 && y > 90  && y < 140) buttonpressed = 6 + buttonoffset;
+	if (x >  20 && x < 100 && y > 160 && y < 210) buttonpressed = 7 + buttonoffset;
+	if (x > 120 && x < 200 && y > 160 && y < 210) buttonpressed = 8 + buttonoffset;
+	if (x > 220 && x < 300 && y > 160 && y < 210) buttonpressed = 9 + buttonoffset;
+      } else if (DispWidth == 480) {
+	if (x >  20 && x < 140 && y > 20  && y <  90) buttonpressed = 1 + buttonoffset;
+	if (x > 180 && x < 300 && y > 20  && y <  90) buttonpressed = 2 + buttonoffset;
+	if (x > 340 && x < 460 && y > 20  && y <  90) buttonpressed = 3 + buttonoffset;
+	if (x >  20 && x < 140 && y > 120 && y < 190) buttonpressed = 4 + buttonoffset;
+	if (x > 180 && x < 300 && y > 120 && y < 190) buttonpressed = 5 + buttonoffset;
+	if (x > 340 && x < 460 && y > 120 && y < 190) buttonpressed = 6 + buttonoffset;
+	if (x >  20 && x < 140 && y > 220 && y < 290) buttonpressed = 7 + buttonoffset;
+	if (x > 180 && x < 300 && y > 220 && y < 290) buttonpressed = 8 + buttonoffset;
+	if (x > 340 && x < 460 && y > 220 && y < 290) buttonpressed = 9 + buttonoffset;
+      }
+      Serial.print("touchpressed;button" + String(buttonpressed) + ";");
+
+      // Exit if SysInfo was selected
+      if (buttonpressed + buttonoffset == 8) {
+	touchscreen = 0;
+	TOUCHED = false;
+	if (ScreenSaverSet == true) Cron.enable(cronid1);
+	playpicture(actCorename, 0, 0, 0);
+	break;
+      }
+    }
+  }
+}
+
+void gettouchcoord(TS_Point p) {
   if (DispRotation == 1) {
     p.x = map(p.x, 0, gfx->height(), gfx->height(), 0);									// flip it around to match the screen.
     p.y = map(p.y, 0, gfx->width(), gfx->width(), 0);
@@ -1001,68 +1150,7 @@ void touchfunctions() {
     p.x = map(p.x, 0, gfx->height(), 0, gfx->height());
     p.y = map(p.y, 0, gfx->width(), 0, gfx->width());									// flip it around to match the screen.
   }
-  x = p.y;
-  y = gfx->height() - p.x;
-
-  if (ts.touched() && TOUCHED == false) {
-    if (ScreenSaverSet == true) Cron.disable(cronid2);
-    while (ts.touched()) delay(100);											// Wait until untouched
-    playpicture("000-touchscreen", -1, -1, 0);										// 000-board with rectangles
-    TOUCHED = true;
-  }
-
-  if (ts.touched() && TOUCHED == true) {
-    while (ts.touched()) delay(100);											// Wait until untouched
-
-    /* // Print out the remapped (rotated) coordinates
-    Serial.println("");
-    Serial.print("p.x/y: ");
-    Serial.print("("); Serial.print(p.x);
-    Serial.print(", "); Serial.print(p.y);
-    Serial.println(")");
-
-    // Print out the real  coordinates
-    Serial.print("normal x/y: ");
-    Serial.print("("); Serial.print(x);
-    Serial.print(", "); Serial.print(y);
-    Serial.println(")");
-    Serial.println("rotation: " + String(DispRotation));
-    Serial.println("act_cor: " + actCorename);
-    Serial.println("-----------------"); */
-
-    if (DispWidth == 320) {
-      if (x >  20 && x < 100 && y > 20  && y <  70) Serial.print("touchpressed;button1;");				// Button 1
-      if (x > 120 && x < 200 && y > 20  && y <  70) Serial.print("touchpressed;button2;");				// Button 2
-      if (x > 220 && x < 300 && y > 20  && y <  70) Serial.print("touchpressed;button3;");				// Button 3
-      if (x >  20 && x < 100 && y > 90  && y < 140) Serial.print("touchpressed;button4;");				// Button 4
-      if (x > 120 && x < 200 && y > 90  && y < 140) Serial.print("touchpressed;button5;");				// Button 5
-      if (x > 220 && x < 300 && y > 90  && y < 140) Serial.print("touchpressed;button6;");				// Button 6
-      if (x > 120 && x < 200 && y > 160 && y < 210) Serial.print("touchpressed;button7;");				// Button 7
-      if (x > 220 && x < 300 && y > 160 && y < 210) Serial.print("touchpressed;button8;");				// Button 8
-      if (x > 0 && x < 70 && y > 200 && y < 240) {									// Trash Can
-	footbanner("Don't wake up Oscar!");
-	delay(1000);
-      }
-    }
-
-    if (DispWidth == 480) {
-      if (x >  20 && x < 140 && y > 20  && y <  90) Serial.print("touchpressed;button1;");				// Button 1
-      if (x > 180 && x < 300 && y > 20  && y <  90) Serial.print("touchpressed;button2;");				// Button 3
-      if (x > 340 && x < 460 && y > 20  && y <  90) Serial.print("touchpressed;button3;");				// Button 3
-      if (x >  20 && x < 140 && y > 120 && y < 190) Serial.print("touchpressed;button4;");				// Button 4
-      if (x > 180 && x < 300 && y > 120 && y < 190) Serial.print("touchpressed;button5;");				// Button 5
-      if (x > 340 && x < 460 && y > 120 && y < 190) Serial.print("touchpressed;button6;");				// Button 6
-      if (x > 180 && x < 300 && y > 220 && y < 290) Serial.print("touchpressed;button7;");				// Button 7
-      if (x > 340 && x < 460 && y > 220 && y < 290) Serial.print("touchpressed;button8;");				// Button 8
-      if (x > 0 && x < 90 && y > 260 && y < 320) {									// Trash Can
-	footbanner("Don't wake up Oscar!");
-	delay(1000);
-      }
-    }
-
-    TOUCHED = false;
-    if (ScreenSaverSet == true) Cron.enable(cronid1);
-    playpicture(actCorename, 0, 0, 0);
-  }
-#endif
+  touchcoordX = p.y;
+  touchcoordY = gfx->height() - p.x;
+  delay(100);
 }
