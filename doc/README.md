@@ -205,7 +205,8 @@ TOUCHBUTTON1="/media/fat/Scripts/mbc raw_seq :72"
 TOUCHBUTTON2="/media/fat/Scripts/mbc raw_seq :71"
 TOUCHBUTTON3="/media/fat/Scripts/mbc raw_seq :73"
 ```
-Button #1 would be then "Volume Down", button #2 "Mute/Unmute", button #3 "Volume Up". Keycodes are taken from [this page](https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h).  
+Keep in mind that these are **Hexadecimal** values!  
+Button #1 would be then "Volume Down", button #2 "Mute/Unmute", button #3 "Volume Up". **Decimal** keycodes are taken from [this page](https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h).  
 There are [templates available in 320x240/480x320](https://github.com/ojaksch/MiSTer_tty2tft/tree/main/pictures) for 
 creating your own "Touch Menu" which can used together with [GIMP](https://www.gimp.org/)
 
@@ -288,7 +289,7 @@ An upload with CMDUPLOAD saves the picture/video on SD.
 When tty2tft has finished booting, it is showing my version of an animation plus some text, IP address and version. 
 If you want to use your own animation, just follow the hints in the [documentation](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/doc/README.md#mjpeg]documentation), 
 save your MPJEG as "000-arcade.mjpeg" to SD overwriting my original one and change the 6th line of wifi.txt from ORG 
-to OWN, which disables additional text output over your video after playing.
+to OWN, which disables additional text output over your video after playing. However, version number and a single "T" ("Touch Support available") are still displayed.
 
 ---
 
