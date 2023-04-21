@@ -58,7 +58,7 @@ The file **wifi.txt** file contains some important settings only needed if you w
   - 3rd line: URL of a picture server for online picture access (set to 127.0.0.1 = disabled)
   - 4th line: WiFi timeout
   - 5th line: WiFi country code
-  - 6th line: Opening screen (ORG for my version, OWN for *your* design
+  - 6th line: Opening screen (ORG for my version, OWN for *your* design, OWN0 for *your* design w/o any text overlay
   - 7th line: Display orientation (1 is normal, 3 rotated by 180°)
   - 8th line: Divisor for screen's X-resolution/axis to swipe
   - 9th line: Divisor for screen's Y-resolution/axis to swipe

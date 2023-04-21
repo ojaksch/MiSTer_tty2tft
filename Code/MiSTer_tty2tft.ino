@@ -23,7 +23,7 @@
 
 
 //#define XDEBUG													// Uncomment to receive debug messages by serial output
-String BuildVersion = "230331";
+String BuildVersion = "230421";
 int DispRotation = 1;													// 0=normal portrait, 1=landscape, 2=portrait 180°, 3=landscape 180°
 
 // IMPORTANT: CHANGE THIS TO YOUR CORRESPONDING DEVICE
@@ -265,7 +265,7 @@ void setup(void) {
     }
 
     OwnMenu = filehandle.readStringUntil('\n');
-    if (OwnMenu != "ORG" && OwnMenu != "OWN") OwnMenu = "ORG";
+    if (OwnMenu != "ORG" && OwnMenu != "OWN" && OwnMenu != "OWN0") OwnMenu = "ORG";
 
     String rot = filehandle.readStringUntil('\n');
     if (rot.isEmpty()) rot == "1";
@@ -286,12 +286,15 @@ void setup(void) {
     writetext("- tty2tft -", 0, 127, 85, DEFAULT_FONT, 0, random(0xFFFF), false, "");
     writetext("Welcome!", 0, 138, 98, DEFAULT_FONT, 0, random(0xFFFF), false, "");
   }
-  writetext(BuildVersion, 0, 275, 233, DEFAULT_FONT, 3, YELLOW, false, "");
+  if (OwnMenu == "ORG" || OwnMenu == "OWN") {
+    writetext(BuildVersion, 0, 275, 233, DEFAULT_FONT, 3, YELLOW, false, "");
+  }
 
   #ifdef ILI9341SPI
     if (!ts.begin(160)) {												// TOUCH - The bigger the threshold, the more sensible is the touch
       writetext("NT", 0, 10, 233, DEFAULT_FONT, 3, RED, false, "");
-    } else {
+    }
+    if (OwnMenu == "ORG" || OwnMenu == "OWN") {
       writetext("T", 0, 10, 233, DEFAULT_FONT, 3, RED, false, "");
     }   
   #endif
@@ -986,8 +989,14 @@ void OTAupdate(String displaytype) {
 	return;
       }
 
+      int loaded_ok_bin;
       int loaded_ok_mac = getFile("https://www.tty2tft.de/MiSTer_tty2tft-installer/MAC.html?" + wifiMacString, "/tty2tft-mac");
-      int loaded_ok_bin = getFile("https://www.tty2tft.de/MiSTer_tty2tft-installer/esp32de_" + NewBuildVersion +"_" + ""+ displaytype + ".bin", "/tty2tft-update.bin");
+      #ifdef ILI9341SPI
+	loaded_ok_bin = getFile("https://www.tty2tft.de/MiSTer_tty2tft-installer/tty2tft-updater-SDCS17.bin", "/tty2tft-updater.bin");
+      #else
+	loaded_ok_bin = getFile("https://www.tty2tft.de/MiSTer_tty2tft-installer/tty2tft-updater-SDCS5.bin", "/tty2tft-updater.bin");
+      #endif
+      loaded_ok_bin = getFile("https://www.tty2tft.de/MiSTer_tty2tft-installer/esp32de_" + NewBuildVersion +"_" + ""+ displaytype + ".bin", "/tty2tft-update.bin");
       if (loaded_ok_bin == 200) {
 	WiFi.disconnect();												// | - Disable background tasks
 	USE_WIFI = false;												// |
@@ -995,14 +1004,11 @@ void OTAupdate(String displaytype) {
 	footbanner("Download done");
 	delay(1000);
 	footbanner("Updating...");
-	File updateBin = SD.open("/tty2tft-update.bin", "r");
+	File updateBin = SD.open("/tty2tft-updater.bin", "r");
 	size_t updateSize = updateBin.size();
 	performUpdate(updateBin, updateSize);
 	updateBin.close();
-	SD.remove("/tty2tft-buildver");
-	SD.remove("/tty2tft-mac");
-	SD.remove("/tty2tft-update.bin");
-	delay(3000);
+	delay(1000);
 	ESP.restart();
       }
     }
@@ -1069,14 +1075,22 @@ void touchfunctions() {
     x = touchcoordX;
     y = touchcoordY;
     while (ts.touched()) delay(100);											// Wait until untouched
+    Serial.println("");										// debug
+    Serial.println("sampling: xirst=" + String(xfirst) + " / " + String(DispWidth / 3));	// debug
+    Serial.println("          xlast=" + String(xlast)  + " / " + String(DispWidth / 3));	// debug
+    Serial.println("          yirst=" + String(yfirst) + " / " + String(DispHeight / 1.3));	// debug
+    Serial.println("          ylast=" + String(ylast)  + " / " + String(DispHeight / 1.3));	// debug
+    Serial.println("---------------------------------");					// debug
 
     if ((ylast - yfirst) > (DispHeight / divisorY.toFloat())) {
+      Serial.println("swipe to buttom / exit");		// debug
       touchscreen = 0;
       TOUCHED = false;
       if (ScreenSaverSet == true) Cron.enable(cronid1);
       playpicture(actCorename, 0, 0, 0);
       break;
     } else if ((ylast - yfirst) < (DispHeight / divisorY.toFloat()) * -1) {
+      Serial.println("swipe to top / exit");		// debug
       touchscreen = 0;
       TOUCHED = false;
       if (ScreenSaverSet == true) Cron.enable(cronid1);
@@ -1092,6 +1106,8 @@ void touchfunctions() {
         x = 0; y = 0;
 	playpicture("000-touchscreen" + String(touchscreen), -1, -1, 0);
       }
+      Serial.println("swipe left to right");				// debug
+      Serial.println("touchscreen: " + String(touchscreen));		// debug
     } else if ((xlast - xfirst) < (DispWidth / divisorX.toFloat()) * -1) {
       touchscreen++;
       if (touchscreen > 3) {
@@ -1100,6 +1116,8 @@ void touchfunctions() {
         x = 0; y = 0;
 	playpicture("000-touchscreen" + String(touchscreen), -1, -1, 0);
       }
+      Serial.println("swipe right to left");				// debug
+      Serial.println("touchscreen: " + String(touchscreen));		// debug
     }
 
     if (touchscreen > 0 && x > 0 && y > 0) {
@@ -1128,6 +1146,8 @@ void touchfunctions() {
 	if (x > 340 && x < 460 && y > 220 && y < 290) buttonpressed = 9 + buttonoffset;
       }
       Serial.print("touchpressed;button" + String(buttonpressed) + ";");
+      Serial.println("");						// debug
+      Serial.println("========================");			// debug
 
       // Exit if SysInfo was selected
       if (buttonpressed + buttonoffset == 8) {
