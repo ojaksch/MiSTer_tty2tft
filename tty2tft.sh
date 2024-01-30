@@ -90,8 +90,8 @@ checkbackchannel() {
       sysinfotemp="n/a"
       sysinfoeth0="$(ip -4 -o addr s eth0 | awk '!/^[0-9]*: ?lo|link\/ether/ {gsub("/", " "); print $4}')"
       sysinfowlan0="$(ip -4 -o addr s wlan0 | awk '!/^[0-9]*: ?lo|link\/ether/ {gsub("/", " "); print $4}')"
-      sysinfocore="$(cat /tmp/CORENAME)"
-      let sysinfocpuclk=$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq)/1000
+      sysinfocore="$(</tmp/CORENAME)"
+      let sysinfocpuclk=$(</sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq)/1000
       [ -z "${sysinfoeth0}" ] && sysinfoeth0="n/a"
       [ -z "${sysinfowlan0}" ] && sysinfowlan0="n/a"
       #echo "CMDSYSINFO,${sysinfotop},${sysinfofree},${sysinfodf},${sysinfotemp},${sysinfoeth0},${sysinfowlan0},${sysinfocore}" > ${TTYDEV}
@@ -200,10 +200,17 @@ if [ -c "${TTYDEV}" ]; then							# check for tty device
   setscreensaver								# Set screensaver, if enabled
   while true; do								# main loop
     if [ -r ${corenamefile} ]; then						# proceed if file exists and is readable (-r)
-      newcore=$(cat ${corenamefile})						# get CORENAME
+      if [ -z "${GAMESELECT}" ]; then
+	newcore=$(<${corenamefile})						# get CORENAME
+      else
+	newcore="${GAMESELECT}"
+	[ "${debug}" = "true" ] && logger "new core: ${GAMESELECT}"
+      fi
+      #
       dbug "Read CORENAME: -${newcore}-"
       if [ "${newcore}" != "${oldcore}" ]; then					# proceed only if Core has changed
 	dbug "Send -${newcore}- to ${TTYDEV}."
+	[ "${debug}" = "true" ] && logger "Send -${newcore}- to ${TTYDEV}."
 	. /media/fat/tty2tft/tty2tft-user.ini					# ReRead INI for changes
 	senddata "CMDCOR,${newcore}"						# The "Magic"
 	oldcore="${newcore}"							# update oldcore variable
@@ -211,25 +218,46 @@ if [ -c "${TTYDEV}" ]; then							# check for tty device
 	setvideoplay								# Set playing of videos or not
 	setscreensaver								# Reenable screensaver, if emabled
 	sendrotation								# Set Display Rotation
+	if [ "${PLAYSOUND}" = "yes" ] && [ -e "${SOUNDPATH}/${newcore}."[mM][pP]3 ]; then
+	  sleep ${PLAYSOUND_DELAY}
+	  (&>/dev/null mpg123 -q --no-control "${SOUNDPATH}/${newcore}."[mM][pP]3 &)	# Play soundfile silently in background
+	fi
       fi									# end if core check
-      if [ "${PLAYSOUND}" = "yes" ] && [ -e "${SOUNDPATH}/${newcore}."[mM][pP]3 ]; then
-	sleep ${PLAYSOUND_DELAY}
-	(&>/dev/null mpg123 -q --no-control "${SOUNDPATH}/${newcore}."[mM][pP]3 &)	# Play soundfile silently in background
-      fi
       [ "${1}" = "tty2x" ] && exit 9
-      if [ "${debug}" = "false" ]; then
+      #
+      if [ $(grep -c "log_file_entry=1" /media/fat/mister.ini) = 1 ] && [ -e /tmp/CURRENTPATH ] && [ -e /tmp/FILESELECT ]; then
+	inotifywait -qq -e modify "${corenamefile}" /tmp/CURRENTPATH /tmp/FILESELECT
+	#checkbackchannel
+	CN="$(</tmp/CORENAME)"
+	CP="$(</tmp/CURRENTPATH)"
+	FP="$(</tmp/FULLPATH)"
+	FS="$(</tmp/FILESELECT)"
+	if ! [ "${FP%%/*}" = "_Arcade" ] && [ "${FS}" = "selected" ] && [ $(echo ${FP} | awk -F "/" '{print NF-1}') -ge 1 ]; then       # only when NOT on "Arcade", a game is selected and
+	  GAMESELECT="${CN}/${CP%.*}"
+	  if [ "${debug}" = "true" ]; then
+	    logger "============================="
+	    logger "CORENAME: $CN"
+	    logger "CURRENTPATH: $CP"
+	    logger "FULLPATH: $FP"
+	    logger "FILESELECT: $FS"
+	    logger "============================="
+	  fi
+        else
+	  [ /tmp/CORENAME -nt /tmp/CURRENTPATH ] && GAMESELECT=""
+	fi
+      elif [ "${debug}" = "false" ]; then
 	while [ "${newcore}" = "${oldcore}" ]; do
 	  inotifywait -qq -e modify -t 1 "${corenamefile}"
-	  ! [ $(cat ${corenamefile}) = "${oldcore}" ] && break
+	  ! [ $(<${corenamefile}) = "${oldcore}" ] && break
 	  checkbackchannel
 	done
-      fi
-      if [ "${debug}" = "true" ]; then
+      elif [ "${debug}" = "true" ]; then
 	while [ "${newcore}" = "${oldcore}" ]; do
 	  inotifywait -e modify -t 1 "${corenamefile}"
 	  checkbackchannel
 	done
       fi
+
     else									# CORENAME file not found
      dbug "File ${corenamefile} not found!"
     fi										# end if /tmp/CORENAME check
