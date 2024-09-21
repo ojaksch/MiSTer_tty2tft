@@ -64,6 +64,9 @@ File32 filehandle;
   Arduino_DataBus *bus = new Arduino_ESP32SPI(13 /* DC */, 5 /* CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */, VSPI /* spi_num */);		// used for Adafruit 2.8 SPI based TFT shield
 #elif defined(ILI9341SPIAZ)
   Arduino_DataBus *bus = new Arduino_ESP32SPI( 4 /* DC */, 5 /* CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */, VSPI /* spi_num */);		// used for AZ-Delivery 2.8 SPI based TFT shield
+#elif defined(ILI9341CYD)
+  Arduino_DataBus *bus = new Arduino_ESP32SPI( 2 /* DC */, 15 /* CS */, 14 /* SCK */, 13 /* MOSI */, 12 /* MISO */, VSPI /* spi_num */);	// used for CYD
+  #define GFX_BL 21	// default backlight pin, you may replace DF_GFX_BL to actual backlight pin
 #else
   Arduino_DataBus *bus = new Arduino_ESP32PAR8(15 /* DC */, 33 /* CS */, 4 /* WR */, 2 /* RD */, 12 /* D0 */, 13 /* D1 */, 26 /* D2 */, 25 /* D3 */, 17 /* D4 */, 16 /* D5 */, 27 /* D6 */, 14 /* D7 */);
 #endif
@@ -83,6 +86,9 @@ File32 filehandle;
   Adafruit_FT6206 ts = Adafruit_FT6206();
 #elif defined(ILI9341SPIAZ)
   Arduino_GFX *gfx = new Arduino_ILI9341(bus, 22 /* RST */, DispRotation /* rotation */, false /* IPS */);		// used for Adafruit 2.8 SPI based TFT shield
+  const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
+#elif defined(ILI9341CYD)
+  Arduino_GFX *gfx = new Arduino_ILI9341(bus, -1 /* RST */, DispRotation /* rotation */, false /* IPS */);		// used for CYD ("Cheap Yellow Display")
   const uint8_t *DEFAULT_FONT = u8g2_font_6x10_mf;									// Default font for 320x240 (HX8347x/ILI9341)
   #include "touch.h"													// TOUCH for AZ-Delivery 2.8 SPI based TFT shield
 #elif defined(ILI9486)
@@ -211,6 +217,13 @@ void setup(void) {
   // Initialise the TFT
   gfx->begin();
   gfx->begin(80000000);		// 80 MHz
+  #ifdef GFX_BL
+    pinMode(GFX_BL, OUTPUT);												// set backlight to pin X, if defined
+    digitalWrite(GFX_BL, HIGH);
+  #endif
+  #ifdef ILI9341CYD
+    bus->sendCommand(ILI9341_INVON);											// CYD needs inverted colors
+  #endif
   gfx->fillScreen(BLACK);
   gfx->setUTF8Print(true);												// enable UTF8 support for the Arduino print() function
   DispWidth = gfx->width();
@@ -303,7 +316,7 @@ void setup(void) {
     // https://github.com/esp8266/Arduino/blob/master/tools/sdk/include/user_interface.h#L750-L760
     //wifi_country_t WIFIcountry;		// https://github.com/esp8266/Arduino/issues/7083
     WiFi.mode(WIFI_STA);												// Explicit use of STA mode
-    WiFi.setAutoConnect(true);
+    //WiFi.setAutoConnect(true);
     WiFi.setAutoReconnect(true);
 
     for (int i = 1; i <= 4; i++) {

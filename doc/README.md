@@ -24,6 +24,7 @@ Table of Contents
 You need an [ESP32 D1 R32 and an ILI9341 (320x200) 8-bit bus display](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/d1r32-ili9341.jpg). 
 Other 8-bit bus displays should also work (according to librarys documentation). Alternatively you can use the [Adafruit 2.8 SPI based shields](https://www.adafruit.com/product/1947).
 
+- 2024-09: ILI9341-CYD ("Cheap Yellow Display")
 - 2022-09: ILI9341 (SPI) (320x240) succesfully tested by Ahmadexp
 - 2022-06: ILI9488 (parallel) (480x320) succesfully tested by myself
 - 2022-06: ILI9486 (parallel) (480x320) succesfully tested by Salamantecas
@@ -79,7 +80,7 @@ If flash happened successfuly and demo works, just continue - otherwise stop her
 
 - Type in  
 `wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- FORCE DISPLAYTYPE`  
-**DISPLAYTYPE** is the type of your display, one of HX8347D, ILI9341, ILI9486, ILI9488 or ILI9341SPI so, for example, your line should read  
+**DISPLAYTYPE** is the type of your display, one of HX8347D, ILI9341, ILI9486, ILI9488, ILI9341CYD or ILI9341SPI so, for example, your line should read  
 `wget https://raw.githubusercontent.com/ojaksch/tty2tft/main/installer.sh -O - | bash -s -- FORCE ILI9341`  
 when flashing for a display ILI9341. This will download and flash the ESP firmware. You should see a [welcome screen](https://github.com/ojaksch/MiSTer_tty2tft/blob/main/pictures/000-arcade.jpg) after the reboot of the ESP.  
 
