@@ -1,3 +1,7 @@
+# This project is now archived and unmaintained
+
+---
+
 *A display add-on for the **[MiSTer FPGA]***
 
 <br>
